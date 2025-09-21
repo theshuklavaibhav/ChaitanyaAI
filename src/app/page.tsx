@@ -103,8 +103,7 @@ export default function Home() {
     }
   }
 
-  const onGenerateAll = () => {
-    onGenerateImage();
+  const onGenerateText = () => {
     onGenerateDescription();
     onGenerateCaptions();
   };
@@ -148,23 +147,34 @@ export default function Home() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-4">
-              <Button onClick={onGenerateAll} disabled={isLoading || !productName} className="w-full" variant="default">
+              <Button onClick={onGenerateText} disabled={isDescriptionLoading || isCaptionsLoading || !productName} className="w-full" variant="default">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Generate All
+                Generate Content
               </Button>
             </CardFooter>
           </Card>
           
           <div className="space-y-8">
             <Card className="overflow-hidden shadow-lg">
-                <CardHeader className="flex flex-row items-center gap-3">
-                    <ImageIcon className="w-6 h-6 text-muted-foreground" />
-                    <CardTitle className="font-headline text-2xl">Product Preview</CardTitle>
+                <CardHeader className="flex flex-row items-start justify-between">
+                  <div className="flex items-center gap-3">
+                      <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                      <CardTitle className="font-headline text-2xl">Product Preview</CardTitle>
+                  </div>
+                  <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} size="sm">
+                    <ImageIcon className="mr-2 h-4 w-4" />
+                    Generate Image
+                  </Button>
                 </CardHeader>
                 <CardContent>
                     <div className="aspect-video w-full relative rounded-lg overflow-hidden border">
                       {isImageLoading ? (
-                        <Skeleton className="h-full w-full" />
+                        <div className="h-full w-full flex items-center justify-center bg-muted">
+                          <div className="text-center text-muted-foreground">
+                            <p>Generating your image...</p>
+                            <p className="text-xs">This may take a moment.</p>
+                          </div>
+                        </div>
                       ) : (
                         <Image 
                             src={displayImageUrl}
