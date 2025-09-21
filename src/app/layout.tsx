@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'CraftAI - AI Assistant for Artisans',
-  description: 'AI-powered content generation for Indian artisans.',
+  title: 'BrandSpark - AI Assistant for Small Business',
+  description: 'AI-powered content generation for small businesses, MSMEs, and entrepreneurs.',
 };
 
 export default function RootLayout({

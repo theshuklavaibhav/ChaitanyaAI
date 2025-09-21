@@ -11,12 +11,12 @@ import { generateEtsyListing } from '@/ai/flows/generate-etsy-listing';
 import { generateShopifyListing } from '@/ai/flows/generate-shopify-listing';
 
 const productSchema = z.object({
-  productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
+  productName: z.string().min(2, { message: 'Product/service name must be at least 2 characters.' }),
 });
 
 const storySchema = z.object({
-    artisanName: z.string().min(2, { message: 'Artisan name must be at least 2 characters.' }),
-    craftType: z.string().min(2, { message: 'Product name must be at least 2 characters to infer craft type.' }),
+    brandName: z.string().min(2, { message: 'Brand/founder name must be at least 2 characters.' }),
+    businessType: z.string().min(2, { message: 'Product/service name must be at least 2 characters.' }),
 });
 
 const translateSchema = z.object({
@@ -81,15 +81,15 @@ export async function handleGenerateImage(productName: string) {
     }
 }
 
-export async function handleGenerateStory(artisanName: string, craftType: string) {
-    const validation = storySchema.safeParse({ artisanName, craftType });
+export async function handleGenerateStory(brandName: string, businessType: string) {
+    const validation = storySchema.safeParse({ brandName, businessType });
   
     if (!validation.success) {
       return { error: validation.error.errors[0].message };
     }
   
     try {
-      const result = await generateBrandStory({ artisanName: validation.data.artisanName, craftType: validation.data.craftType });
+      const result = await generateBrandStory({ brandName: validation.data.brandName, businessType: validation.data.businessType });
       return { data: result.brandStory };
     } catch (e) {
       console.error(e);
@@ -97,15 +97,15 @@ export async function handleGenerateStory(artisanName: string, craftType: string
     }
 }
 
-export async function handleAnalyzeTrends(craftType: string) {
-    const validation = productSchema.safeParse({ productName: craftType });
+export async function handleAnalyzeTrends(productOrIndustry: string) {
+    const validation = productSchema.safeParse({ productName: productOrIndustry });
 
     if (!validation.success) {
       return { error: validation.error.errors[0].message };
     }
 
     try {
-      const result = await analyzeMarketTrends({ craftType: validation.data.productName });
+      const result = await analyzeMarketTrends({ productOrIndustry: validation.data.productName });
       return { data: result };
     } catch (e) {
         console.error(e);

@@ -31,7 +31,7 @@ export default function Home() {
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
   const [productName, setProductName] = useState('');
-  const [artisanName, setArtisanName] = useState('');
+  const [brandName, setBrandName] = useState('');
   const [description, setDescription] = useState<string | null>(null);
   const [captions, setCaptions] = useState<string[] | null>(null);
   const [story, setStory] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export default function Home() {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product name.',
+        description: 'Please enter a product or service name.',
       });
       return;
     }
@@ -100,7 +100,7 @@ export default function Home() {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product name.',
+        description: 'Please enter a product or service name.',
       });
       return;
     }
@@ -126,7 +126,7 @@ export default function Home() {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product name.',
+        description: 'Please enter a product or service name.',
       });
       return;
     }
@@ -146,17 +146,17 @@ export default function Home() {
   }
 
   const onGenerateStory = async () => {
-    if (!artisanName || !productName) {
+    if (!brandName || !productName) {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'Please enter both an artisan and product name.',
+        description: 'Please enter a brand/founder name and a product/service.',
       });
       return;
     }
     setIsStoryLoading(true);
     setStory(null);
-    const result = await handleGenerateStory(artisanName, productName);
+    const result = await handleGenerateStory(brandName, productName);
     setIsStoryLoading(false);
     if (result.error) {
       toast({
@@ -174,7 +174,7 @@ export default function Home() {
         toast({
             variant: 'destructive',
             title: 'Uh oh! Something went wrong.',
-            description: 'Please enter a product name or craft type.',
+            description: 'Please enter a product, service, or industry.',
         });
         return;
     }
@@ -274,7 +274,7 @@ export default function Home() {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product name.',
+        description: 'Please enter a product or service name.',
       });
       return;
     }
@@ -292,7 +292,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <Logo className="w-10 h-10 text-primary" />
               <h1 className="text-4xl font-headline font-bold text-foreground">
-                CraftAI
+                BrandSpark
               </h1>
             </div>
             <Button
@@ -306,7 +306,7 @@ export default function Home() {
             </Button>
         </div>
         <p className="text-muted-foreground mt-2 text-lg">
-          Your AI-powered marketplace assistant for showcasing Indian artisanship.
+          Your AI-powered assistant for marketing and growth.
         </p>
       </header>
 
@@ -315,27 +315,27 @@ export default function Home() {
           <div className="lg:col-span-4 space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
+                <CardTitle className="font-headline text-2xl">Generate Your Content</CardTitle>
                 <CardDescription>
-                  Enter your product and artisan name, and let our AI generate content for you.
+                  Enter your business details and let our AI generate marketing content for you.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
               <div className="space-y-2">
-                  <Label htmlFor="artisan-name">Artisan Name</Label>
+                  <Label htmlFor="brand-name">Brand / Founder Name</Label>
                   <Input
-                    id="artisan-name"
-                    placeholder="e.g., Priya Singh"
-                    value={artisanName}
-                    onChange={(e) => setArtisanName(e.target.value)}
+                    id="brand-name"
+                    placeholder="e.g., Priya's Kitchen"
+                    value={brandName}
+                    onChange={(e) => setBrandName(e.target.value)}
                     disabled={isLoading}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="product-name">Product Name / Craft Type</Label>
+                  <Label htmlFor="product-name">Product / Service / Industry</Label>
                   <Input
                     id="product-name"
-                    placeholder="e.g., Handwoven Pashmina Scarf"
+                    placeholder="e.g., Homemade Pickles"
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     disabled={isLoading}
@@ -363,7 +363,7 @@ export default function Home() {
                           <Pencil className="mr-2 h-4 w-4" />
                           Description & Captions
                       </Button>
-                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full" variant="secondary">
+                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !brandName} className="w-full" variant="secondary">
                           <BookUser className="mr-2 h-4 w-4" />
                           Generate Story
                       </Button>
@@ -394,7 +394,7 @@ export default function Home() {
                       ) : (
                         <Image 
                             src={displayImageUrl}
-                            alt={productName || 'Artisan product'}
+                            alt={productName || 'Product or service'}
                             fill
                             className="object-cover"
                             data-ai-hint={defaultImage.imageHint}

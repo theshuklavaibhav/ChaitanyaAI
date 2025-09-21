@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateProductDescriptionInputSchema = z.object({
-  productName: z.string().describe('The name of the product to describe.'),
+  productName: z.string().describe('The name of the product or service to describe.'),
 });
 export type GenerateProductDescriptionInput = z.infer<
   typeof GenerateProductDescriptionInputSchema
@@ -22,7 +22,7 @@ const GenerateProductDescriptionOutputSchema = z.object({
   productDescription: z
     .string()
     .describe(
-      'A 150-200 word compelling product description that tells a story, highlighting traditional craftsmanship, uniqueness, and cultural value.'
+      'A 150-200 word compelling product description that highlights key features, benefits, and the value proposition for the target audience.'
     ),
 });
 export type GenerateProductDescriptionOutput = z.infer<
@@ -39,10 +39,10 @@ const prompt = ai.definePrompt({
   name: 'generateProductDescriptionPrompt',
   input: {schema: GenerateProductDescriptionInputSchema},
   output: {schema: GenerateProductDescriptionOutputSchema},
-  prompt: `You are an expert copywriter specializing in crafting product descriptions that tell a story. You focus on traditional craftsmanship, uniqueness, and cultural value. Your writing is evocative, personal, and makes the reader feel connected to the artisan.
+  prompt: `You are an expert copywriter specializing in crafting product and service descriptions that sell. You focus on clear benefits, engaging language, and a strong call to action.
 
-  Write a 150-200 word compelling product description for the following product:
-  Product Name: {{{productName}}}
+  Write a 150-200 word compelling product description for the following:
+  Product/Service Name: {{{productName}}}
   `,
 });
 

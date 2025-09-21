@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview AI flow for analyzing market trends for a given craft.
+ * @fileOverview AI flow for analyzing market trends for a given product or industry.
  *
  * - analyzeMarketTrends - A function that returns trend analysis.
  * - AnalyzeMarketTrendsInput - The input type for the function.
@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AnalyzeMarketTrendsInputSchema = z.object({
-  craftType: z.string().describe('The type of craft to analyze market trends for.'),
+  productOrIndustry: z.string().describe('The product, service, or industry to analyze market trends for.'),
 });
 export type AnalyzeMarketTrendsInput = z.infer<
   typeof AnalyzeMarketTrendsInputSchema
@@ -21,7 +21,7 @@ export type AnalyzeMarketTrendsInput = z.infer<
 const AnalyzeMarketTrendsOutputSchema = z.object({
   keywords: z
     .array(z.string())
-    .describe('A list of 5-7 popular SEO keywords for this craft.'),
+    .describe('A list of 5-7 popular SEO keywords for this product/industry.'),
   colorPalette: z
     .array(z.object({ name: z.string(), hex: z.string() }))
     .describe(
@@ -30,7 +30,7 @@ const AnalyzeMarketTrendsOutputSchema = z.object({
   styleSuggestions: z
     .array(z.string())
     .describe(
-      'Two or three brief suggestions for product styles or variations that are currently popular.'
+      'Two or three brief suggestions for product/service styles or variations that are currently popular.'
     ),
 });
 export type AnalyzeMarketTrendsOutput = z.infer<
@@ -47,14 +47,14 @@ const prompt = ai.definePrompt({
   name: 'analyzeMarketTrendsPrompt',
   input: {schema: AnalyzeMarketTrendsInputSchema},
   output: {schema: AnalyzeMarketTrendsOutputSchema},
-  prompt: `You are a digital marketing and e-commerce trend analyst specializing in handcrafted goods and artisan products. Your goal is to provide actionable insights to help artisans appeal to modern digital audiences.
+  prompt: `You are a digital marketing and e-commerce trend analyst. Your goal is to provide actionable insights to help small businesses appeal to modern digital audiences.
 
-  Analyze the market trends for the following craft: {{{craftType}}}
+  Analyze the market trends for the following product, service, or industry: {{{productOrIndustry}}}
 
   Provide the following insights:
-  - **Keywords:** A list of 5-7 popular SEO keywords that customers are likely to use when searching for this type of product online.
-  - **Color Palette:** A trending color palette of 4 colors that would be appealing for this craft. Provide both a name and a hex code for each color.
-  - **Style Suggestions:** Two or three brief, actionable suggestions for product styles or variations that are currently popular with online shoppers.
+  - **Keywords:** A list of 5-7 popular SEO keywords that customers are likely to use when searching for this online.
+  - **Color Palette:** A trending color palette of 4 colors that would be appealing for this business's branding. Provide both a name and a hex code for each color.
+  - **Style Suggestions:** Two or three brief, actionable suggestions for product or service variations that are currently popular with online shoppers.
   `,
 });
 
