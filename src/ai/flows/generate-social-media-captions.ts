@@ -31,9 +31,7 @@ const prompt = ai.definePrompt({
   prompt: `You are a social media marketing expert. Generate three short, creative social media captions (under 70 words each) to promote the following product on social media platforms. Focus on persuasive language and tone.
 
 Product Name: {{{productName}}}
-
-Captions:
-1.`,
+`,
   config: {
     temperature: 0.7,
     maxOutputTokens: 500,
