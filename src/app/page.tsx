@@ -314,7 +314,7 @@ setIsShopifyLoading(false);
                     <span className="sr-only">Toggle theme</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-background text-foreground border-border">
+                <DropdownMenuContent align="end" className="bg-popover border-border text-popover-foreground">
                   <DropdownMenuItem onClick={() => setTheme("light")}>
                     Light
                   </DropdownMenuItem>
@@ -430,9 +430,10 @@ setIsShopifyLoading(false);
                     <CardContent>
                         <div className="aspect-video w-full relative rounded-lg overflow-hidden border border-border">
                           {isImageLoading ? (
-                            <div className="h-full w-full flex items-center justify-center bg-muted">
-                               <div className="text-center text-primary/80">
-                                 <p>Generating your image...</p>
+                            <div className="h-full w-full flex flex-col items-center justify-center bg-muted/50">
+                               <Sparkles className="w-8 h-8 text-primary animate-spin" />
+                               <div className="text-center text-primary/80 mt-4">
+                                 <p className="font-semibold">Generating your image...</p>
                                  <p className="text-xs">This may take a moment.</p>
                                </div>
                             </div>
@@ -797,3 +798,4 @@ setIsShopifyLoading(false);
     
 
     
+

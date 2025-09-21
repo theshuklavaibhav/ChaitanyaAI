@@ -77,7 +77,7 @@ export async function handleGenerateImage(productName: string) {
       return { data: result.imageUrl };
     } catch (e) {
       console.error(e);
-      return { error: 'Failed to generate image. Please try again.' };
+      return { error: 'Failed to generate image. The generation model may be overloaded. Please try again in a moment.' };
     }
 }
 
