@@ -8,6 +8,7 @@ import { generateBrandStory } from '@/ai/flows/generate-brand-story';
 import { analyzeMarketTrends } from '@/ai/flows/analyze-market-trends';
 import { translateContent } from '@/ai/flows/translate-content';
 import { generateEtsyListing } from '@/ai/flows/generate-etsy-listing';
+import { generateShopifyListing } from '@/ai/flows/generate-shopify-listing';
 
 const productSchema = z.object({
   productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
@@ -23,10 +24,11 @@ const translateSchema = z.object({
   targetLanguage: z.string().min(2, { message: 'Target language must be specified.' }),
 });
 
-const etsySchema = z.object({
+const listingSchema = z.object({
   productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
   productDescription: z.string().min(10, { message: 'Product description must be at least 10 characters.' }),
 });
+
 
 export async function handleGenerateDescription(productName: string) {
   const validation = productSchema.safeParse({ productName });
@@ -128,7 +130,7 @@ export async function handleTranslate(content: string, targetLanguage: string) {
 }
 
 export async function handleGenerateEtsyListing(productName: string, productDescription: string) {
-  const validation = etsySchema.safeParse({ productName, productDescription });
+  const validation = listingSchema.safeParse({ productName, productDescription });
 
   if (!validation.success) {
     return { error: validation.error.errors[0].message };
@@ -140,5 +142,21 @@ export async function handleGenerateEtsyListing(productName: string, productDesc
   } catch (e) {
     console.error(e);
     return { error: 'Failed to generate Etsy listing. Please try again.' };
+  }
+}
+
+export async function handleGenerateShopifyListing(productName: string, productDescription: string) {
+  const validation = listingSchema.safeParse({ productName, productDescription });
+
+  if (!validation.success) {
+    return { error: validation.error.errors[0].message };
+  }
+
+  try {
+    const result = await generateShopifyListing(validation.data);
+    return { data: result };
+  } catch (e) {
+    console.error(e);
+    return { error: 'Failed to generate Shopify listing. Please try again.' };
   }
 }

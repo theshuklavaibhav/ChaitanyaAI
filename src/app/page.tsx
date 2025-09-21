@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory, handleAnalyzeTrends, handleTranslate, handleGenerateEtsyListing } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory, handleAnalyzeTrends, handleTranslate, handleGenerateEtsyListing, handleGenerateShopifyListing } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -19,6 +19,8 @@ import type { AnalyzeMarketTrendsOutput } from '@/ai/flows/analyze-market-trends
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { GenerateEtsyListingOutput } from '@/ai/flows/generate-etsy-listing';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import type { GenerateShopifyListingOutput } from '@/ai/flows/generate-shopify-listing';
+import { Textarea } from '@/components/ui/textarea';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
@@ -33,6 +35,7 @@ export default function Home() {
   const [story, setStory] = useState<string | null>(null);
   const [trends, setTrends] = useState<AnalyzeMarketTrendsOutput | null>(null);
   const [etsyListing, setEtsyListing] = useState<GenerateEtsyListingOutput | null>(null);
+  const [shopifyListing, setShopifyListing] = useState<GenerateShopifyListingOutput | null>(null);
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -40,6 +43,7 @@ export default function Home() {
   const [isTrendsLoading, setIsTrendsLoading] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isEtsyLoading, setIsEtsyLoading] = useState(false);
+  const [isShopifyLoading, setIsShopifyLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
@@ -74,6 +78,7 @@ export default function Home() {
     setIsDescriptionLoading(true);
     setDescription(null);
     setEtsyListing(null);
+    setShopifyListing(null);
     const result = await handleGenerateDescription(productName);
     setIsDescriptionLoading(false);
 
@@ -237,6 +242,30 @@ export default function Home() {
     }
   }
 
+  const onGenerateShopify = async () => {
+    if (!productName || !description) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Content',
+        description: 'Please generate a product description first.',
+      });
+      return;
+    }
+    setIsShopifyLoading(true);
+    setShopifyListing(null);
+    const result = await handleGenerateShopifyListing(productName, description);
+    setIsShopifyLoading(false);
+    if (result.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: result.error,
+      });
+    } else if (result.data) {
+      setShopifyListing(result.data);
+    }
+  }
+
 
   const onGenerateContent = () => {
     if (!productName) {
@@ -252,7 +281,7 @@ export default function Home() {
   }
 
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading;
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading || isShopifyLoading;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -459,9 +488,9 @@ export default function Home() {
             {(isDescriptionLoading || description || isTranslating) && (
               <Card className="shadow-lg">
                 <CardHeader>
-                  <div className="flex justify-between items-start gap-4">
+                  <div className="flex justify-between items-start gap-4 flex-wrap">
                     <CardTitle className="font-headline text-2xl">AI-Generated Product Description</CardTitle>
-                    <div className="flex-shrink-0 flex gap-2">
+                    <div className="flex-shrink-0 flex gap-2 flex-wrap">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm" disabled={!description || isTranslating}>
@@ -479,7 +508,11 @@ export default function Home() {
                         </DropdownMenu>
                          <Button variant="outline" size="sm" disabled={!description || isEtsyLoading} onClick={onGenerateEtsy}>
                             <Sparkles className="mr-2 h-4 w-4" />
-                            Optimize for Etsy
+                            Etsy
+                        </Button>
+                         <Button variant="outline" size="sm" disabled={!description || isShopifyLoading} onClick={onGenerateShopify}>
+                            <Sparkles className="mr-2 h-4 w-4" />
+                            Shopify
                         </Button>
                     </div>
                   </div>
@@ -533,8 +566,8 @@ export default function Home() {
                                                 <Input readOnly value={etsyListing.etsyTitle} className="pr-10 text-base" />
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
-                                                        <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'title')}>
-                                                            {copied === 'title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
+                                                        <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'etsy-title')}>
+                                                            {copied === 'etsy-title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
                                                         </Button>
                                                     </TooltipTrigger>
                                                     <TooltipContent>
@@ -550,9 +583,9 @@ export default function Home() {
                                             </h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {etsyListing.etsyTags.map(tag => (
-                                                    <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => copyToClipboard(tag, `tag-${tag}`)}>
+                                                    <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => copyToClipboard(tag, `etsy-tag-${tag}`)}>
                                                         {tag}
-                                                        {copied === `tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
+                                                        {copied === `etsy-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
                                                     </Badge>
                                                 ))}
                                             </div>
@@ -563,6 +596,86 @@ export default function Home() {
                         )}
                     </CardContent>
                 </Card>
+            )}
+
+            {(isShopifyLoading || shopifyListing) && (
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                    Shopify Listing Optimization
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isShopifyLoading ? (
+                    <div className="space-y-4">
+                        <Skeleton className="h-8 w-1/3" />
+                        <Skeleton className="h-6 w-full" />
+                        <Skeleton className="h-8 w-1/3 mt-4" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-8 w-1/3 mt-4" />
+                        <div className="flex flex-wrap gap-2">
+                            <Skeleton className="h-6 w-20" />
+                            <Skeleton className="h-6 w-24" />
+                            <Skeleton className="h-6 w-16" />
+                        </div>
+                    </div>
+                  ) : (
+                    shopifyListing && (
+                      <TooltipProvider>
+                        <div className="space-y-6">
+                          <div>
+                            <Label className="text-lg font-semibold flex items-center gap-2 mb-2">
+                              Shopify Title
+                            </Label>
+                            <div className="relative">
+                              <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 text-base" />
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyTitle, 'shopify-title')}>
+                                        {copied === 'shopify-title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Copy Title</p></TooltipContent>
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div>
+                            <Label className="text-lg font-semibold flex items-center gap-2 mb-2">
+                              Shopify Meta Description
+                            </Label>
+                            <div className="relative">
+                              <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 text-base" rows={3} />
+                               <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyMetaDescription, 'shopify-desc')}>
+                                        {copied === 'shopify-desc' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Copy Description</p></TooltipContent>
+                              </Tooltip>
+                            </div>
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                              <Tag className="w-5 h-5 text-muted-foreground" />
+                              Shopify Tags
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                              {shopifyListing.shopifyTags.map(tag => (
+                                <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => copyToClipboard(tag, `shopify-tag-${tag}`)}>
+                                  {tag}
+                                  {copied === `shopify-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </TooltipProvider>
+                    )
+                  )}
+                </CardContent>
+              </Card>
             )}
 
             {(isCaptionsLoading || captions) && (
