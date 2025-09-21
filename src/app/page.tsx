@@ -292,77 +292,77 @@ export default function Home() {
             CraftAI
           </h1>
         </div>
-        <p className="text-muted-foreground mt-2">
+        <p className="text-muted-foreground mt-2 text-lg">
           Your AI-powered marketplace assistant for showcasing Indian artisanship.
         </p>
       </header>
 
       <main className="flex-grow container mx-auto px-4 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
-              <CardDescription>
-                Enter your product and artisan name, and let our AI generate content for you.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-            <div className="space-y-2">
-                <Label htmlFor="artisan-name">Artisan Name</Label>
-                <Input
-                  id="artisan-name"
-                  placeholder="e.g., Priya Singh"
-                  value={artisanName}
-                  onChange={(e) => setArtisanName(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-4 space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
+                <CardDescription>
+                  Enter your product and artisan name, and let our AI generate content for you.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="product-name">Product Name / Craft Type</Label>
-                <Input
-                  id="product-name"
-                  placeholder="e.g., Handwoven Pashmina Scarf"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
-                <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
-                  <SelectTrigger id="caption-tone">
-                    <SelectValue placeholder="Select a tone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tones.map((tone) => (
-                      <SelectItem key={tone} value={tone}>
-                        {tone}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                    <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full">
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Description & Captions
-                    </Button>
-                    <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full">
-                        <BookUser className="mr-2 h-4 w-4" />
-                        Generate Story
-                    </Button>
+                  <Label htmlFor="artisan-name">Artisan Name</Label>
+                  <Input
+                    id="artisan-name"
+                    placeholder="e.g., Priya Singh"
+                    value={artisanName}
+                    onChange={(e) => setArtisanName(e.target.value)}
+                    disabled={isLoading}
+                  />
                 </div>
-                 <Button onClick={onAnalyzeTrends} disabled={isLoading || !productName} className="w-full" variant="outline">
-                    <Lightbulb className="mr-2 h-4 w-4" />
-                    Analyze Market Trends
-                </Button>
-            </CardFooter>
-          </Card>
-          
-          <div className="space-y-8">
-            <Card className="overflow-hidden shadow-lg">
+                <div className="space-y-2">
+                  <Label htmlFor="product-name">Product Name / Craft Type</Label>
+                  <Input
+                    id="product-name"
+                    placeholder="e.g., Handwoven Pashmina Scarf"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
+                  <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
+                    <SelectTrigger id="caption-tone">
+                      <SelectValue placeholder="Select a tone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tones.map((tone) => (
+                        <SelectItem key={tone} value={tone}>
+                          {tone}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+              <CardFooter className="flex flex-col gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                      <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full">
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Description & Captions
+                      </Button>
+                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full">
+                          <BookUser className="mr-2 h-4 w-4" />
+                          Generate Story
+                      </Button>
+                  </div>
+                   <Button onClick={onAnalyzeTrends} disabled={isLoading || !productName} className="w-full" variant="outline">
+                      <Lightbulb className="mr-2 h-4 w-4" />
+                      Analyze Market Trends
+                  </Button>
+              </CardFooter>
+            </Card>
+
+             <Card className="overflow-hidden">
                 <CardHeader className="flex flex-row items-start justify-between">
                   <div className="flex items-center gap-3">
                       <ImageIcon className="w-6 h-6 text-muted-foreground" />
@@ -396,9 +396,11 @@ export default function Home() {
                   </Button>
                 </CardFooter>
             </Card>
-
+          </div>
+          
+          <div className="lg:col-span-8 space-y-8">
             {(isTrendsLoading || trends) && (
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl flex items-center gap-2">
                     <Lightbulb className="w-6 h-6 text-primary" />
@@ -442,7 +444,7 @@ export default function Home() {
                                     {trends.colorPalette.map(color => (
                                         <div key={color.hex} className="flex items-center gap-2">
                                             <div className="w-8 h-8 rounded-full border-2" style={{ backgroundColor: color.hex }} />
-                                            <span className="text-sm">{color.name}</span>
+                                            <span className="text-sm font-medium">{color.name}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -464,7 +466,7 @@ export default function Home() {
             )}
 
             {(isStoryLoading || story) && (
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl">AI-Generated Brand Story</CardTitle>
                 </CardHeader>
@@ -486,7 +488,7 @@ export default function Home() {
             )}
 
             {(isDescriptionLoading || description || isTranslating) && (
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
                   <div className="flex justify-between items-start gap-4 flex-wrap">
                     <CardTitle className="font-headline text-2xl">AI-Generated Product Description</CardTitle>
@@ -533,7 +535,7 @@ export default function Home() {
             )}
 
             {(isEtsyLoading || etsyListing) && (
-                <Card className="shadow-lg">
+                <Card>
                     <CardHeader>
                         <CardTitle className="font-headline text-2xl flex items-center gap-2">
                             <Sparkles className="w-6 h-6 text-primary" />
@@ -559,11 +561,11 @@ export default function Home() {
                                 <TooltipProvider>
                                     <div className="space-y-6">
                                         <div>
-                                            <Label className="text-lg font-semibold flex items-center gap-2 mb-2">
+                                            <Label className="text-base font-semibold flex items-center gap-2 mb-2">
                                                 Etsy Title
                                             </Label>
                                             <div className="relative">
-                                                <Input readOnly value={etsyListing.etsyTitle} className="pr-10 text-base" />
+                                                <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-background" />
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'etsy-title')}>
@@ -577,7 +579,7 @@ export default function Home() {
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                                            <h3 className="text-base font-semibold flex items-center gap-2 mb-2">
                                                 <Tag className="w-5 h-5 text-muted-foreground"/>
                                                 Etsy Tags
                                             </h3>
@@ -599,7 +601,7 @@ export default function Home() {
             )}
 
             {(isShopifyLoading || shopifyListing) && (
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl flex items-center gap-2">
                     <Sparkles className="w-6 h-6 text-primary" />
@@ -625,11 +627,11 @@ export default function Home() {
                       <TooltipProvider>
                         <div className="space-y-6">
                           <div>
-                            <Label className="text-lg font-semibold flex items-center gap-2 mb-2">
+                            <Label className="text-base font-semibold flex items-center gap-2 mb-2">
                               Shopify Title
                             </Label>
                             <div className="relative">
-                              <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 text-base" />
+                              <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-background" />
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyTitle, 'shopify-title')}>
@@ -641,11 +643,11 @@ export default function Home() {
                             </div>
                           </div>
                           <div>
-                            <Label className="text-lg font-semibold flex items-center gap-2 mb-2">
+                            <Label className="text-base font-semibold flex items-center gap-2 mb-2">
                               Shopify Meta Description
                             </Label>
                             <div className="relative">
-                              <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 text-base" rows={3} />
+                              <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-background" rows={3} />
                                <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyMetaDescription, 'shopify-desc')}>
@@ -657,7 +659,7 @@ export default function Home() {
                             </div>
                           </div>
                           <div>
-                            <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                            <h3 className="text-base font-semibold flex items-center gap-2 mb-2">
                               <Tag className="w-5 h-5 text-muted-foreground" />
                               Shopify Tags
                             </h3>
@@ -679,7 +681,7 @@ export default function Home() {
             )}
 
             {(isCaptionsLoading || captions) && (
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl">AI-Generated Social Media Captions</CardTitle>
                 </CardHeader>
