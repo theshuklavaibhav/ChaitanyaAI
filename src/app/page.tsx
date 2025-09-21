@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Sparkles, Bot, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu, Mail, Store, MessageSquare, Briefcase } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import Autoplay from "embla-carousel-autoplay"
+
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -894,6 +896,11 @@ setIsShopifyLoading(false);
                   </p>
                   <div className="max-w-5xl mx-auto">
                     <Carousel
+                      plugins={[
+                        Autoplay({
+                          delay: 3000,
+                        }),
+                      ]}
                       opts={{
                         align: "start",
                         loop: true,
