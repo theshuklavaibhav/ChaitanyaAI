@@ -22,12 +22,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import type { GenerateShopifyListingOutput } from '@/ai/flows/generate-shopify-listing';
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
+const platforms = ['General', 'Instagram', 'X (Twitter)', 'LinkedIn'] as const;
+type Platform = (typeof platforms)[number];
 const languages = ['Hindi', 'Spanish', 'French'];
 const emailTones = ['Formal', 'Friendly', 'Direct'] as const;
 type EmailTone = (typeof emailTones)[number];
@@ -57,6 +58,7 @@ export default function Home() {
   const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
+  const [platform, setPlatform] = useState<Platform>('General');
 
   const mainContentRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLElement>(null);
@@ -118,7 +120,7 @@ export default function Home() {
 
     setIsCaptionsLoading(true);
     setCaptions(null);
-    const result = await handleGenerateCaptions(productName, captionTone);
+    const result = await handleGenerateCaptions(productName, captionTone, platform);
     setIsCaptionsLoading(false);
 
     if (result.error) {
@@ -426,20 +428,37 @@ setIsShopifyLoading(false);
                             className="bg-background border-input"
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
-                          <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
-                            <SelectTrigger id="caption-tone" className="bg-background border-input">
-                              <SelectValue placeholder="Select a tone" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-popover border-border text-popover-foreground">
-                              {tones.map((tone) => (
-                                <SelectItem key={tone} value={tone} className="focus:bg-accent">
-                                  {tone}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="caption-tone">Caption Tone</Label>
+                            <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
+                              <SelectTrigger id="caption-tone" className="bg-background border-input">
+                                <SelectValue placeholder="Select a tone" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover border-border text-popover-foreground">
+                                {tones.map((tone) => (
+                                  <SelectItem key={tone} value={tone} className="focus:bg-accent">
+                                    {tone}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="platform">Platform</Label>
+                            <Select value={platform} onValueChange={(value: Platform) => setPlatform(value)} disabled={isLoading}>
+                              <SelectTrigger id="platform" className="bg-background border-input">
+                                <SelectValue placeholder="Select a platform" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover border-border text-popover-foreground">
+                                {platforms.map((platform) => (
+                                  <SelectItem key={platform} value={platform} className="focus:bg-accent">
+                                    {platform}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </CardContent>
                       <CardFooter className="flex flex-col gap-4">
@@ -837,6 +856,7 @@ setIsShopifyLoading(false);
                             <Bot className="w-6 h-6 text-primary" />
                             AI-Generated Social Media Captions
                           </CardTitle>
+                           <CardDescription>Tailored for <span className="font-semibold text-foreground">{platform}</span></CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                           {isCaptionsLoading ? (
@@ -921,7 +941,7 @@ setIsShopifyLoading(false);
                                         <CardTitle className="text-xl">Engage on Social Media</CardTitle>
                                       </CardHeader>
                                       <CardContent>
-                                        <p className="text-muted-foreground">Create engaging social media captions in various tones to build a loyal following and drive traffic to your online store.</p>
+                                        <p className="text-muted-foreground">Create engaging, platform-tailored social media captions to build a loyal following and drive traffic to your online store.</p>
                                       </CardContent>
                                   </Card>
                               </div>

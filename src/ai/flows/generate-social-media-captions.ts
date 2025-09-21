@@ -1,25 +1,27 @@
 'use server';
 /**
- * @fileOverview Generates social media captions for a given product name.
+ * @fileOverview Generates social media captions for a given product name, tailored for a specific platform.
  *
- * - generateSocialMediaCaptions - A function that generates social media captions for a given product name.
- * - GenerateSocialMediaCaptionsInput - The input type for the generateSocialMediaCaptions function.
- * - GenerateSocialMediaCaptionsOutput - The return type for the generateSocialMediaCaptions function.
+ * - generateSocialMediaCaptions - A function that generates social media captions.
+ * - GenerateSocialMediaCaptionsInput - The input type for the function.
+ * - GenerateSocialMediaCaptionsOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const TonesEnum = z.enum(['Persuasive', 'Creative', 'Professional']);
+const PlatformsEnum = z.enum(['General', 'Instagram', 'X (Twitter)', 'LinkedIn']);
 
 const GenerateSocialMediaCaptionsInputSchema = z.object({
   productName: z.string().describe('The name of the product to generate captions for.'),
   tone: TonesEnum.describe('The tone of the captions.'),
+  platform: PlatformsEnum.describe('The social media platform to generate captions for.'),
 });
 export type GenerateSocialMediaCaptionsInput = z.infer<typeof GenerateSocialMediaCaptionsInputSchema>;
 
 const GenerateSocialMediaCaptionsOutputSchema = z.object({
-  captions: z.array(z.string()).describe('An array of three social media captions for the product, each under 70 words.'),
+  captions: z.array(z.string()).describe('An array of three social media captions for the product, each under 70 words and tailored for the specified platform.'),
 });
 export type GenerateSocialMediaCaptionsOutput = z.infer<typeof GenerateSocialMediaCaptionsOutputSchema>;
 
@@ -32,6 +34,12 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateSocialMediaCaptionsInputSchema},
   output: {schema: GenerateSocialMediaCaptionsOutputSchema},
   prompt: `You are a social media marketing expert. Generate three short, engaging social media captions (under 70 words each) to promote a product.
+
+The captions should be tailored for the {{{platform}}} platform.
+- For Instagram, use relevant hashtags and emojis.
+- For X (Twitter), keep it concise and punchy.
+- For LinkedIn, use a professional and informative tone.
+- For General, create versatile captions that can work across platforms.
 
 Use a {{{tone}}} tone.
 

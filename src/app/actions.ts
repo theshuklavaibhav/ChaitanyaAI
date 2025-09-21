@@ -14,6 +14,12 @@ const productSchema = z.object({
   productName: z.string().min(2, { message: 'Product/service name must be at least 2 characters.' }),
 });
 
+const captionsSchema = z.object({
+    productName: z.string().min(2, { message: 'Product/service name must be at least 2 characters.' }),
+    tone: z.enum(['Persuasive', 'Creative', 'Professional']),
+    platform: z.enum(['General', 'Instagram', 'X (Twitter)', 'LinkedIn']),
+});
+
 const storySchema = z.object({
     brandName: z.string().min(2, { message: 'Brand/founder name must be at least 2 characters.' }),
     businessType: z.string().min(2, { message: 'Product/service name must be at least 2 characters.' }),
@@ -51,15 +57,19 @@ export async function handleGenerateDescription(productName: string) {
   }
 }
 
-export async function handleGenerateCaptions(productName: string, tone: GenerateSocialMediaCaptionsInput['tone']) {
-  const validation = productSchema.safeParse({ productName });
+export async function handleGenerateCaptions(
+    productName: string, 
+    tone: GenerateSocialMediaCaptionsInput['tone'],
+    platform: GenerateSocialMediaCaptionsInput['platform']
+) {
+  const validation = captionsSchema.safeParse({ productName, tone, platform });
 
   if (!validation.success) {
     return { error: validation.error.errors[0].message };
   }
 
   try {
-    const result = await generateSocialMediaCaptions({ productName: validation.data.productName, tone });
+    const result = await generateSocialMediaCaptions(validation.data);
     return { data: result.captions };
   } catch (e) {
     console.error(e);
