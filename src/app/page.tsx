@@ -340,7 +340,7 @@ setIsShopifyLoading(false);
               Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">ChaitanyaAI</span>
           </h1>
           <p className="mt-4 text-lg md:text-2xl text-foreground/60 max-w-3xl mx-auto relative font-light">
-              Your Strategic AI Partner
+             AI-powered content generation for small businesses, MSMEs, and entrepreneurs.
           </p>
           <button
               onClick={scrollToContent}
