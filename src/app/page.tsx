@@ -350,7 +350,7 @@ export default function Home() {
                           <Pencil className="mr-2 h-4 w-4" />
                           Description & Captions
                       </Button>
-                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full">
+                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full" variant="outline">
                           <BookUser className="mr-2 h-4 w-4" />
                           Generate Story
                       </Button>
@@ -390,7 +390,7 @@ export default function Home() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                  <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} className="w-full" variant="secondary">
+                  <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} className="w-full">
                       <Sparkles className="mr-2 h-4 w-4" />
                       Generate Image
                   </Button>
@@ -443,7 +443,7 @@ export default function Home() {
                                 <div className="flex flex-wrap gap-4">
                                     {trends.colorPalette.map(color => (
                                         <div key={color.hex} className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full border-2" style={{ backgroundColor: color.hex }} />
+                                            <div className="w-8 h-8 rounded-full border-2 border-border" style={{ backgroundColor: color.hex }} />
                                             <span className="text-sm font-medium">{color.name}</span>
                                         </div>
                                     ))}
@@ -565,7 +565,7 @@ export default function Home() {
                                                 Etsy Title
                                             </Label>
                                             <div className="relative">
-                                                <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-background" />
+                                                <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-muted" />
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
                                                         <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'etsy-title')}>
@@ -631,7 +631,7 @@ export default function Home() {
                               Shopify Title
                             </Label>
                             <div className="relative">
-                              <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-background" />
+                              <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-muted" />
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyTitle, 'shopify-title')}>
@@ -647,7 +647,7 @@ export default function Home() {
                               Shopify Meta Description
                             </Label>
                             <div className="relative">
-                              <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-background" rows={3} />
+                              <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-muted" rows={3} />
                                <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyMetaDescription, 'shopify-desc')}>
@@ -699,8 +699,8 @@ export default function Home() {
                   ) : (
                     captions?.map((caption, index) => (
                       <div key={index} className="flex items-start gap-4 p-4 border rounded-lg bg-card-foreground/5">
-                        <div className="p-2 bg-accent rounded-full">
-                           <Bot className="w-5 h-5 text-accent-foreground" />
+                        <div className="p-2 bg-primary rounded-full">
+                           <Bot className="w-5 h-5 text-primary-foreground" />
                         </div>
                         <p className="flex-1 text-foreground/90">{caption}</p>
                       </div>
