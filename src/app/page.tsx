@@ -879,13 +879,13 @@ setIsShopifyLoading(false);
                     <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454710/Google_Cloud_logo.svg_sfwwbj.png" alt="Google Cloud Logo" width={128} height={20} className="dark:invert"/>
                 </a>
                 <a href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                   <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758509825/gemini-logo_wbmj4m.png" alt="Gemini Logo" width={96} height={32}/>
+                   <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758456539/New_Google_Gemini_logo_2025_vvsg89.png" alt="Gemini Logo" width={96} height={32}/>
                 </a>
                 <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
                    <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/firebase_logo_daipos.svg" alt="Firebase Logo" width={112} height={40} className="dark:invert" />
                 </a>
                 <a href="https://cloud.google.com/vertex-ai" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                    <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/VertexAI_Logo_ewd9oo.png" alt="Vertex AI Logo" width={112} height={40} className="dark:invert"/>
+                    <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758456762/Newvertixailogo-3-_1_tp9oqr.png" alt="Vertex AI Logo" width={112} height={40} className="dark:invert"/>
                 </a>
             </div>
         </div>
@@ -893,5 +893,3 @@ setIsShopifyLoading(false);
     </div>
   );
 }
-
-    
