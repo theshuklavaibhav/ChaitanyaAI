@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, ArrowDown } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
@@ -30,7 +30,6 @@ const languages = ['Hindi', 'Spanish', 'French'];
 
 export default function Home() {
   const { toast } = useToast();
-  const { theme, setTheme } = useTheme();
   const [productName, setProductName] = useState('');
   const [brandName, setBrandName] = useState('');
   const [description, setDescription] = useState<string | null>(null);
@@ -263,7 +262,7 @@ export default function Home() {
     setIsShopifyLoading(true);
     setShopifyListing(null);
     const result = await handleGenerateShopifyListing(productName, description);
-    setIsShopifyLoading(false);
+setIsShopifyLoading(false);
     if (result.error) {
       toast({
         variant: 'destructive',
@@ -430,326 +429,328 @@ export default function Home() {
                 </Card>
               </div>
               
-              <div className="lg:col-span-8 space-y-8">
-                {(isTrendsLoading || trends) && (
-                  <Card className="bg-slate-900/50 border-cyan-400/20">
-                    <CardHeader>
-                      <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                        <Lightbulb className="w-6 h-6 text-cyan-400" />
-                        Market Trend Analysis
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {isTrendsLoading ? (
-                        <div className="space-y-4">
-                            <Skeleton className="h-8 w-1/3 bg-slate-800" />
-                            <div className="flex flex-wrap gap-2">
-                                <Skeleton className="h-6 w-20 bg-slate-800" />
-                                <Skeleton className="h-6 w-24 bg-slate-800" />
-                                <Skeleton className="h-6 w-16 bg-slate-800" />
-                            </div>
-                            <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
-                            <div className="flex gap-2">
-                                <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
-                                <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
-                                <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
-                            </div>
-                        </div>
-                      ) : (
-                        trends && (
-                            <div className="space-y-6">
-                                <div>
-                                    <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                        <Tag className="w-5 h-5 text-muted-foreground"/>
-                                        Popular Keywords
-                                    </h3>
-                                    <div className="flex flex-wrap gap-2">
-                                        {trends.keywords.map(keyword => <Badge key={keyword} variant="secondary" className="bg-slate-800 text-white/80">{keyword}</Badge>)}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                        <Palette className="w-5 h-5 text-muted-foreground"/>
-                                        Trending Color Palette
-                                    </h3>
-                                    <div className="flex flex-wrap gap-4">
-                                        {trends.colorPalette.map(color => (
-                                            <div key={color.hex} className="flex items-center gap-2">
-                                                <div className="w-8 h-8 rounded-full border-2 border-slate-700" style={{ backgroundColor: color.hex }} />
-                                                <span className="text-sm font-medium text-white/80">{color.name}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                 <div>
-                                    <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                        <TrendingUp className="w-5 h-5 text-muted-foreground"/>
-                                        Style Suggestions
-                                    </h3>
-                                    <ul className="list-disc list-inside space-y-2 text-white/80">
-                                       {trends.styleSuggestions.map((suggestion, i) => <li key={i}>{suggestion}</li>)}
-                                    </ul>
-                                </div>
-                            </div>
-                        )
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-
-                {(isStoryLoading || story) && (
-                  <Card className="bg-slate-900/50 border-cyan-400/20">
-                    <CardHeader>
-                      <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                        <BookUser className="w-6 h-6 text-cyan-400" />
-                        AI-Generated Brand Story
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {isStoryLoading ? (
-                        <div className="space-y-2">
-                          <Skeleton className="h-4 w-full bg-slate-800" />
-                          <Skeleton className="h-4 w-full bg-slate-800" />
-                          <Skeleton className="h-4 w-5/6 bg-slate-800" />
-                          <Skeleton className="h-4 w-3/4 bg-slate-800" />
-                          <Skeleton className="h-4 w-full bg-slate-800" />
-                          <Skeleton className="h-4 w-4/6 bg-slate-800" />
-                        </div>
-                      ) : (
-                        <p className="text-white/80 whitespace-pre-wrap leading-relaxed">{story}</p>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-
-                {(isDescriptionLoading || description || isTranslating) && (
-                  <Card className="bg-slate-900/50 border-cyan-400/20">
-                    <CardHeader>
-                      <div className="flex justify-between items-start gap-4 flex-wrap">
-                        <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                           <Pencil className="w-6 h-6 text-cyan-400" />
-                           AI-Generated Product Description
-                        </CardTitle>
-                        <div className="flex-shrink-0 flex gap-2 flex-wrap">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm" disabled={!description || isTranslating} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
-                                  <Languages className="mr-2 h-4 w-4" />
-                                  Translate
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className="bg-slate-900 border-slate-700 text-white">
-                                {languages.map(lang => (
-                                  <DropdownMenuItem key={lang} onSelect={() => onTranslateDescription(lang)} className="focus:bg-slate-800">
-                                    {lang}
-                                  </DropdownMenuItem>
-                                ))}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                             <Button variant="outline" size="sm" disabled={!description || isEtsyLoading} onClick={onGenerateEtsy} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
-                                <Sparkles className="mr-2 h-4 w-4" />
-                                Etsy
-                            </Button>
-                             <Button variant="outline" size="sm" disabled={!description || isShopifyLoading} onClick={onGenerateShopify} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
-                                <Sparkles className="mr-2 h-4 w-4" />
-                                Shopify
-                            </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      {isDescriptionLoading || isTranslating ? (
-                        <div className="space-y-2">
-                          <Skeleton className="h-4 w-full bg-slate-800" />
-                          <Skeleton className="h-4 w-full bg-slate-800" />
-                          <Skeleton className="h-4 w-5/6 bg-slate-800" />
-                          <Skeleton className="h-4 w-3/4 bg-slate-800" />
-                        </div>
-                      ) : (
-                        <p className="text-white/80 whitespace-pre-wrap leading-relaxed">{description}</p>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-
-                {(isEtsyLoading || etsyListing) && (
-                    <Card className="bg-slate-900/50 border-cyan-400/20">
+              <div className="lg:col-span-8">
+                <div className="space-y-8">
+                    {(isTrendsLoading || trends) && (
+                      <Card className="bg-slate-900/50 border-cyan-400/20">
                         <CardHeader>
-                            <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                                <Sparkles className="w-6 h-6 text-cyan-400" />
-                                Etsy Listing Optimization
-                            </CardTitle>
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
+                            <Lightbulb className="w-6 h-6 text-cyan-400" />
+                            Market Trend Analysis
+                          </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            {isEtsyLoading ? (
-                               <div className="space-y-4">
-                                    <Skeleton className="h-8 w-1/3 bg-slate-800" />
-                                    <Skeleton className="h-6 w-full bg-slate-800" />
-                                    <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
-                                    <div className="flex flex-wrap gap-2">
-                                        <Skeleton className="h-6 w-20 bg-slate-800" />
-                                        <Skeleton className="h-6 w-24 bg-slate-800" />
-                                        <Skeleton className="h-6 w-16 bg-slate-800" />
-                                        <Skeleton className="h-6 w-20 bg-slate-800" />
-                                        <Skeleton className="h-6 w-24 bg-slate-800" />
+                          {isTrendsLoading ? (
+                            <div className="space-y-4">
+                                <Skeleton className="h-8 w-1/3 bg-slate-800" />
+                                <div className="flex flex-wrap gap-2">
+                                    <Skeleton className="h-6 w-20 bg-slate-800" />
+                                    <Skeleton className="h-6 w-24 bg-slate-800" />
+                                    <Skeleton className="h-6 w-16 bg-slate-800" />
+                                </div>
+                                <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
+                                <div className="flex gap-2">
+                                    <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
+                                    <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
+                                    <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
+                                </div>
+                            </div>
+                          ) : (
+                            trends && (
+                                <div className="space-y-6">
+                                    <div>
+                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                            <Tag className="w-5 h-5 text-muted-foreground"/>
+                                            Popular Keywords
+                                        </h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {trends.keywords.map(keyword => <Badge key={keyword} variant="secondary" className="bg-slate-800 text-white/80">{keyword}</Badge>)}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                            <Palette className="w-5 h-5 text-muted-foreground"/>
+                                            Trending Color Palette
+                                        </h3>
+                                        <div className="flex flex-wrap gap-4">
+                                            {trends.colorPalette.map(color => (
+                                                <div key={color.hex} className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-full border-2 border-slate-700" style={{ backgroundColor: color.hex }} />
+                                                    <span className="text-sm font-medium text-white/80">{color.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                     <div>
+                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                            <TrendingUp className="w-5 h-5 text-muted-foreground"/>
+                                            Style Suggestions
+                                        </h3>
+                                        <ul className="list-disc list-inside space-y-2 text-white/80">
+                                           {trends.styleSuggestions.map((suggestion, i) => <li key={i}>{suggestion}</li>)}
+                                        </ul>
                                     </div>
                                 </div>
-                            ) : (
-                                etsyListing && (
-                                    <TooltipProvider>
-                                        <div className="space-y-6">
-                                            <div>
-                                                <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                                    Etsy Title
-                                                </Label>
-                                                <div className="relative">
-                                                    <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-slate-800 border-slate-700 text-white" />
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'etsy-title')}>
-                                                                {copied === 'etsy-title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>Copy Title</p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                                    <Tag className="w-5 h-5 text-muted-foreground"/>
-                                                    Etsy Tags
-                                                </h3>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {etsyListing.etsyTags.map(tag => (
-                                                        <Badge key={tag} variant="secondary" className="cursor-pointer bg-slate-800 text-white/80" onClick={() => copyToClipboard(tag, `etsy-tag-${tag}`)}>
-                                                            {tag}
-                                                            {copied === `etsy-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </TooltipProvider>
-                                )
-                            )}
+                            )
+                          )}
                         </CardContent>
-                    </Card>
-                )}
+                      </Card>
+                    )}
 
-                {(isShopifyLoading || shopifyListing) && (
-                  <Card className="bg-slate-900/50 border-cyan-400/20">
-                    <CardHeader>
-                      <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                        <Sparkles className="w-6 h-6 text-cyan-400" />
-                        Shopify Listing Optimization
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {isShopifyLoading ? (
-                        <div className="space-y-4">
-                            <Skeleton className="h-8 w-1/3 bg-slate-800" />
-                            <Skeleton className="h-6 w-full bg-slate-800" />
-                            <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
-                            <Skeleton className="h-10 w-full bg-slate-800" />
-                            <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
-                            <div className="flex flex-wrap gap-2">
-                                <Skeleton className="h-6 w-20 bg-slate-800" />
-                                <Skeleton className="h-6 w-24 bg-slate-800" />
-                                <Skeleton className="h-6 w-16 bg-slate-800" />
-                            </div>
-                        </div>
-                      ) : (
-                        shopifyListing && (
-                          <TooltipProvider>
-                            <div className="space-y-6">
-                              <div>
-                                <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                  Shopify Title
-                                </Label>
-                                <div className="relative">
-                                  <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-slate-800 border-slate-700 text-white" />
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyTitle, 'shopify-title')}>
-                                            {copied === 'shopify-title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent><p>Copy Title</p></TooltipContent>
-                                  </Tooltip>
-                                </div>
-                              </div>
-                              <div>
-                                <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                  Shopify Meta Description
-                                </Label>
-                                <div className="relative">
-                                  <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-slate-800 border-slate-700 text-white" rows={3} />
-                                   <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyMetaDescription, 'shopify-desc')}>
-                                            {copied === 'shopify-desc' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent><p>Copy Description</p></TooltipContent>
-                                  </Tooltip>
-                                </div>
-                              </div>
-                              <div>
-                                <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
-                                  <Tag className="w-5 h-5 text-muted-foreground" />
-                                  Shopify Tags
-                                </h3>
-                                <div className="flex flex-wrap gap-2">
-                                  {shopifyListing.shopifyTags.map(tag => (
-                                    <Badge key={tag} variant="secondary" className="cursor-pointer bg-slate-800 text-white/80" onClick={() => copyToClipboard(tag, `shopify-tag-${tag}`)}>
-                                      {tag}
-                                      {copied === `shopify-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          </TooltipProvider>
-                        )
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-
-                {(isCaptionsLoading || captions) && (
-                  <Card className="bg-slate-900/50 border-cyan-400/20">
-                    <CardHeader>
-                      <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                        <Bot className="w-6 h-6 text-cyan-400" />
-                        AI-Generated Social Media Captions
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {isCaptionsLoading ? (
-                        Array.from({ length: 3 }).map((_, i) => (
-                          <div key={i} className="flex items-start gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full bg-slate-800" />
-                            <div className="flex-1 space-y-2">
+                    {(isStoryLoading || story) && (
+                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                        <CardHeader>
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
+                            <BookUser className="w-6 h-6 text-cyan-400" />
+                            AI-Generated Brand Story
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          {isStoryLoading ? (
+                            <div className="space-y-2">
                               <Skeleton className="h-4 w-full bg-slate-800" />
-                              <Skeleton className="h-4 w-4/5 bg-slate-800" />
+                              <Skeleton className="h-4 w-full bg-slate-800" />
+                              <Skeleton className="h-4 w-5/6 bg-slate-800" />
+                              <Skeleton className="h-4 w-3/4 bg-slate-800" />
+                              <Skeleton className="h-4 w-full bg-slate-800" />
+                              <Skeleton className="h-4 w-4/6 bg-slate-800" />
+                            </div>
+                          ) : (
+                            <p className="text-white/80 whitespace-pre-wrap leading-relaxed">{story}</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {(isDescriptionLoading || description || isTranslating) && (
+                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                        <CardHeader>
+                          <div className="flex justify-between items-start gap-4 flex-wrap">
+                            <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
+                               <Pencil className="w-6 h-6 text-cyan-400" />
+                               AI-Generated Product Description
+                            </CardTitle>
+                            <div className="flex-shrink-0 flex gap-2 flex-wrap">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" disabled={!description || isTranslating} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
+                                      <Languages className="mr-2 h-4 w-4" />
+                                      Translate
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent className="bg-slate-900 border-slate-700 text-white">
+                                    {languages.map(lang => (
+                                      <DropdownMenuItem key={lang} onSelect={() => onTranslateDescription(lang)} className="focus:bg-slate-800">
+                                        {lang}
+                                      </DropdownMenuItem>
+                                    ))}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                                 <Button variant="outline" size="sm" disabled={!description || isEtsyLoading} onClick={onGenerateEtsy} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
+                                    <Sparkles className="mr-2 h-4 w-4" />
+                                    Etsy
+                                </Button>
+                                 <Button variant="outline" size="sm" disabled={!description || isShopifyLoading} onClick={onGenerateShopify} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
+                                    <Sparkles className="mr-2 h-4 w-4" />
+                                    Shopify
+                                </Button>
                             </div>
                           </div>
-                        ))
-                      ) : (
-                        captions?.map((caption, index) => (
-                          <div key={index} className="flex items-start gap-4 p-4 border border-cyan-400/20 rounded-lg bg-slate-900">
-                            <div className="p-2 bg-cyan-500 rounded-full">
-                               <Bot className="w-5 h-5 text-slate-900" />
+                        </CardHeader>
+                        <CardContent>
+                          {isDescriptionLoading || isTranslating ? (
+                            <div className="space-y-2">
+                              <Skeleton className="h-4 w-full bg-slate-800" />
+                              <Skeleton className="h-4 w-full bg-slate-800" />
+                              <Skeleton className="h-4 w-5/6 bg-slate-800" />
+                              <Skeleton className="h-4 w-3/4 bg-slate-800" />
                             </div>
-                            <p className="flex-1 text-white/80">{caption}</p>
-                          </div>
-                        ))
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
+                          ) : (
+                            <p className="text-white/80 whitespace-pre-wrap leading-relaxed">{description}</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {(isEtsyLoading || etsyListing) && (
+                        <Card className="bg-slate-900/50 border-cyan-400/20">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
+                                    <Sparkles className="w-6 h-6 text-cyan-400" />
+                                    Etsy Listing Optimization
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {isEtsyLoading ? (
+                                   <div className="space-y-4">
+                                        <Skeleton className="h-8 w-1/3 bg-slate-800" />
+                                        <Skeleton className="h-6 w-full bg-slate-800" />
+                                        <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
+                                        <div className="flex flex-wrap gap-2">
+                                            <Skeleton className="h-6 w-20 bg-slate-800" />
+                                            <Skeleton className="h-6 w-24 bg-slate-800" />
+                                            <Skeleton className="h-6 w-16 bg-slate-800" />
+                                            <Skeleton className="h-6 w-20 bg-slate-800" />
+                                            <Skeleton className="h-6 w-24 bg-slate-800" />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    etsyListing && (
+                                        <TooltipProvider>
+                                            <div className="space-y-6">
+                                                <div>
+                                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                                        Etsy Title
+                                                    </Label>
+                                                    <div className="relative">
+                                                        <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-slate-800 border-slate-700 text-white" />
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'etsy-title')}>
+                                                                    {copied === 'etsy-title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
+                                                                </Button>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Copy Title</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                                        <Tag className="w-5 h-5 text-muted-foreground"/>
+                                                        Etsy Tags
+                                                    </h3>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {etsyListing.etsyTags.map(tag => (
+                                                            <Badge key={tag} variant="secondary" className="cursor-pointer bg-slate-800 text-white/80" onClick={() => copyToClipboard(tag, `etsy-tag-${tag}`)}>
+                                                                {tag}
+                                                                {copied === `etsy-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </TooltipProvider>
+                                    )
+                                )}
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {(isShopifyLoading || shopifyListing) && (
+                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                        <CardHeader>
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
+                            <Sparkles className="w-6 h-6 text-cyan-400" />
+                            Shopify Listing Optimization
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          {isShopifyLoading ? (
+                            <div className="space-y-4">
+                                <Skeleton className="h-8 w-1/3 bg-slate-800" />
+                                <Skeleton className="h-6 w-full bg-slate-800" />
+                                <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
+                                <Skeleton className="h-10 w-full bg-slate-800" />
+                                <Skeleton className="h-8 w-1_3 mt-4 bg-slate-800" />
+                                <div className="flex flex-wrap gap-2">
+                                    <Skeleton className="h-6 w-20 bg-slate-800" />
+                                    <Skeleton className="h-6 w-24 bg-slate-800" />
+                                    <Skeleton className="h-6 w-16 bg-slate-800" />
+                                </div>
+                            </div>
+                          ) : (
+                            shopifyListing && (
+                              <TooltipProvider>
+                                <div className="space-y-6">
+                                  <div>
+                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                      Shopify Title
+                                    </Label>
+                                    <div className="relative">
+                                      <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-slate-800 border-slate-700 text-white" />
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyTitle, 'shopify-title')}>
+                                                {copied === 'shopify-title' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent><p>Copy Title</p></TooltipContent>
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                      Shopify Meta Description
+                                    </Label>
+                                    <div className="relative">
+                                      <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-slate-800 border-slate-700 text-white" rows={3} />
+                                       <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyMetaDescription, 'shopify-desc')}>
+                                                {copied === 'shopify-desc' ? <Check className="w-4 h-4 text-green-500"/> : <Copy className="w-4 h-4" />}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent><p>Copy Description</p></TooltipContent>
+                                      </Tooltip>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                      <Tag className="w-5 h-5 text-muted-foreground" />
+                                      Shopify Tags
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2">
+                                      {shopifyListing.shopifyTags.map(tag => (
+                                        <Badge key={tag} variant="secondary" className="cursor-pointer bg-slate-800 text-white/80" onClick={() => copyToClipboard(tag, `shopify-tag-${tag}`)}>
+                                          {tag}
+                                          {copied === `shopify-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </TooltipProvider>
+                            )
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {(isCaptionsLoading || captions) && (
+                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                        <CardHeader>
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
+                            <Bot className="w-6 h-6 text-cyan-400" />
+                            AI-Generated Social Media Captions
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {isCaptionsLoading ? (
+                            Array.from({ length: 3 }).map((_, i) => (
+                              <div key={i} className="flex items-start gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full bg-slate-800" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-full bg-slate-800" />
+                                  <Skeleton className="h-4 w-4/5 bg-slate-800" />
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            captions?.map((caption, index) => (
+                              <div key={index} className="flex items-start gap-4 p-4 border border-cyan-400/20 rounded-lg bg-slate-900">
+                                <div className="p-2 bg-cyan-500 rounded-full">
+                                   <Bot className="w-5 h-5 text-slate-900" />
+                                </div>
+                                <p className="flex-1 text-white/80">{caption}</p>
+                              </div>
+                            ))
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+                </div>
               </div>
             </div>
           </div>
@@ -762,4 +763,5 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+
+    
