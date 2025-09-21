@@ -10,21 +10,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const { toast } = useToast();
   const [productName, setProductName] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
   const [description, setDescription] = useState<string | null>(null);
   const [captions, setCaptions] = useState<string[] | null>(null);
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
-  
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+
   const defaultImage = PlaceHolderImages[0];
-  const displayImageUrl = imageUrl || defaultImage.imageUrl;
+  const displayImageUrl = generatedImageUrl || defaultImage.imageUrl;
 
   const onGenerateDescription = async () => {
     if (!productName) {
@@ -78,7 +79,38 @@ export default function Home() {
     }
   };
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading;
+  const onGenerateImage = async () => {
+    if (!productName) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Please enter a product name.',
+      });
+      return;
+    }
+    setIsImageLoading(true);
+    setGeneratedImageUrl(null);
+    const result = await handleGenerateImage(productName);
+    setIsImageLoading(false);
+    if (result.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: result.error,
+      });
+    } else if (result.data) {
+      setGeneratedImageUrl(result.data);
+    }
+  }
+
+  const onGenerateAll = () => {
+    onGenerateImage();
+    onGenerateDescription();
+    onGenerateCaptions();
+  };
+
+
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -114,25 +146,11 @@ export default function Home() {
                   disabled={isLoading}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="image-url">Product Image URL (Optional)</Label>
-                <Input
-                  id="image-url"
-                  placeholder="https://..."
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-4">
-              <Button onClick={onGenerateDescription} disabled={isLoading || !productName} className="w-full" variant="default">
+              <Button onClick={onGenerateAll} disabled={isLoading || !productName} className="w-full" variant="default">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Generate Description
-              </Button>
-              <Button onClick={onGenerateCaptions} disabled={isLoading || !productName} className="w-full" variant="accent">
-                <Bot className="mr-2 h-4 w-4" />
-                Generate Social Captions
+                Generate All
               </Button>
             </CardFooter>
           </Card>
@@ -145,14 +163,17 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                     <div className="aspect-video w-full relative rounded-lg overflow-hidden border">
+                      {isImageLoading ? (
+                        <Skeleton className="h-full w-full" />
+                      ) : (
                         <Image 
                             src={displayImageUrl}
                             alt={productName || 'Artisan product'}
                             fill
                             className="object-cover"
                             data-ai-hint={defaultImage.imageHint}
-                            unoptimized
                         />
+                      )}
                     </div>
                 </CardContent>
             </Card>
