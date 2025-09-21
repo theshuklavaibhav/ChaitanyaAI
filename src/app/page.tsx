@@ -16,7 +16,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Tone } from '@/ai/flows/generate-social-media-captions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const tones = ['Persuasive', 'Creative', 'Professional'] as const;
+const tones: Tone[] = ['Persuasive', 'Creative', 'Professional'];
 
 export default function Home() {
   const { toast } = useToast();
@@ -27,14 +27,16 @@ export default function Home() {
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
-  const [displayImageUrl, setDisplayImageUrl] = useState<string>('');
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
   const defaultImage = PlaceHolderImages[0];
+  const [displayImageUrl, setDisplayImageUrl] = useState<string>(defaultImage.imageUrl);
 
   useEffect(() => {
-    setDisplayImageUrl(generatedImageUrl || defaultImage.imageUrl);
-  }, [generatedImageUrl, defaultImage.imageUrl]);
+    if (generatedImageUrl) {
+      setDisplayImageUrl(generatedImageUrl);
+    }
+  }, [generatedImageUrl]);
 
 
   const onGenerateDescription = async () => {
