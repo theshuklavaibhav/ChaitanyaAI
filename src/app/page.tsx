@@ -324,7 +324,7 @@ setIsShopifyLoading(false);
             </div>
             
             <div className="flex flex-1 items-center justify-end space-x-2">
-              <a href="https://github.com/GoogleCloudPlatform/firebase-studio-templates" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/theshuklavaibhav/ChaitanyaAI" target="_blank" rel="noopener noreferrer">
                 <Button variant="ghost" size="icon">
                   <Github className="h-5 w-5" />
                   <span className="sr-only">GitHub</span>
