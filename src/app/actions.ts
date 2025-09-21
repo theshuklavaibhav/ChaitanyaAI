@@ -50,6 +50,9 @@ export async function handleGenerateImage(productName: string) {
   
     try {
       const result = await generateImage({ productName: validation.data.productName });
+      if (!result.imageUrl) {
+        return { error: 'Failed to generate image. Please try a different product name.' };
+      }
       return { data: result.imageUrl };
     } catch (e) {
       console.error(e);

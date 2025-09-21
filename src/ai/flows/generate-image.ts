@@ -17,7 +17,7 @@ const GenerateImageInputSchema = z.object({
 export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
 
 const GenerateImageOutputSchema = z.object({
-    imageUrl: z.string().describe('The data URI of the generated image.'),
+    imageUrl: z.string().describe('The data URI of the generated image. Can be an empty string if image generation fails.'),
 });
 export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
 
@@ -32,10 +32,15 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async (input) => {
-    const { media } = await ai.generate({
-      model: 'googleai/imagen-4.0-fast-generate-001',
-      prompt: `A high-quality, professional product photograph of a ${input.productName} on a clean, white background. The lighting should be bright and even, highlighting the details and craftsmanship of the product.`,
-    });
-    return {imageUrl: media.url!};
+    try {
+        const { media } = await ai.generate({
+            model: 'googleai/gemini-pro-vision',
+            prompt: `A high-quality, professional product photograph of a ${input.productName}. The product should be on a clean, neutral background. The lighting should be bright and even.`,
+        });
+        return {imageUrl: media?.url ?? ''};
+    } catch (error) {
+        console.error('Image generation failed:', error);
+        return {imageUrl: ''};
+    }
   }
 );
