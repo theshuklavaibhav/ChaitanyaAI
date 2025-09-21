@@ -465,7 +465,7 @@ setIsShopifyLoading(false);
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                               <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                                   <Pencil className="mr-2 h-4 w-4" />
-                                  Description & Captions
+                                  Description &amp; Captions
                               </Button>
                               <Button onClick={onGenerateStory} disabled={isLoading || !productName || !brandName} className="w-full" variant="secondary">
                                   <BookUser className="mr-2 h-4 w-4" />
