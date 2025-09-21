@@ -879,7 +879,7 @@ setIsShopifyLoading(false);
                     <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454710/Google_Cloud_logo.svg_sfwwbj.png" alt="Google Cloud Logo" width={128} height={20} className="dark:invert"/>
                 </a>
                 <a href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                   <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/gemini_logo_gmrqix.png" alt="Gemini Logo" width={96} height={32}/>
+                   <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758509825/gemini-logo_wbmj4m.png" alt="Gemini Logo" width={96} height={32}/>
                 </a>
                 <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
                    <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/firebase_logo_daipos.svg" alt="Firebase Logo" width={112} height={40} className="dark:invert" />
@@ -893,3 +893,5 @@ setIsShopifyLoading(false);
     </div>
   );
 }
+
+    
