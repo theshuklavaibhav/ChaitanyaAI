@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu, Mail } from 'lucide-react';
+import { Sparkles, Bot, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu, Mail, Store, MessageSquare, Briefcase } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
@@ -58,7 +59,7 @@ export default function Home() {
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
   const mainContentRef = useRef<HTMLDivElement>(null);
-  const footerRef = useRef<HTMLElement>(null);
+  const aboutRef = useRef<HTMLElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [copied, setCopied] = useState<string | null>(null);
@@ -73,8 +74,8 @@ export default function Home() {
     mainContentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
   
-  const scrollToFooter = () => {
-    footerRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToAbout = () => {
+    aboutRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const onGenerateDescription = async () => {
@@ -298,7 +299,7 @@ setIsShopifyLoading(false);
   const navLinks = (
     <>
       <Button variant="link" onClick={() => { scrollToContent(); setIsMobileMenuOpen(false); }} className="text-foreground/80 hover:text-foreground">Features</Button>
-      <Button variant="link" onClick={() => { scrollToFooter(); setIsMobileMenuOpen(false); }} className="text-foreground/80 hover:text-foreground">About</Button>
+      <Button variant="link" onClick={() => { scrollToAbout(); setIsMobileMenuOpen(false); }} className="text-foreground/80 hover:text-foreground">About</Button>
     </>
   );
 
@@ -865,14 +866,91 @@ setIsShopifyLoading(false);
               </div>
             </div>
           </div>
+          <section ref={aboutRef} className="bg-secondary/50 py-20 lg:py-32">
+              <div className="container mx-auto px-4 text-center">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4">The Problem We Solve</h2>
+                  <p className="max-w-3xl mx-auto text-muted-foreground text-lg mb-12">
+                      Millions of talented artisans and small business owners struggle to stand out in the crowded digital marketplace. They lack the time, marketing budget, and specialized skills to write compelling copy that captures hearts and drives sales.
+                  </p>
+                  <div className="max-w-5xl mx-auto">
+                    <Carousel
+                      opts={{
+                        align: "start",
+                        loop: true,
+                      }}
+                      className="w-full"
+                    >
+                      <CarouselContent>
+                          <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                              <div className="p-1">
+                                  <Card className="h-full">
+                                      <CardHeader>
+                                        <div className="mx-auto bg-primary/10 p-3 rounded-full mb-4">
+                                          <BookUser className="w-8 h-8 text-primary"/>
+                                        </div>
+                                        <CardTitle className="text-xl">Craft Compelling Stories</CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <p className="text-muted-foreground">Generate authentic brand stories and product descriptions that connect with customers on a personal level, turning browsers into buyers.</p>
+                                      </CardContent>
+                                  </Card>
+                              </div>
+                          </CarouselItem>
+                          <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                              <div className="p-1">
+                                  <Card className="h-full">
+                                      <CardHeader>
+                                        <div className="mx-auto bg-primary/10 p-3 rounded-full mb-4">
+                                          <Store className="w-8 h-8 text-primary"/>
+                                        </div>
+                                        <CardTitle className="text-xl">Master Marketplace SEO</CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <p className="text-muted-foreground">Get SEO-optimized titles and tags for Etsy and Shopify to climb search rankings and attract more organic traffic to your listings.</p>
+                                      </CardContent>
+                                  </Card>
+                              </div>
+                          </CarouselItem>
+                          <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                              <div className="p-1">
+                                  <Card className="h-full">
+                                      <CardHeader>
+                                        <div className="mx-auto bg-primary/10 p-3 rounded-full mb-4">
+                                          <MessageSquare className="w-8 h-8 text-primary"/>
+                                        </div>
+                                        <CardTitle className="text-xl">Engage on Social Media</CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <p className="text-muted-foreground">Create engaging social media captions in various tones to build a loyal following and drive traffic to your online store.</p>
+                                      </CardContent>
+                                  </Card>
+                              </div>
+                          </CarouselItem>
+                           <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                              <div className="p-1">
+                                  <Card className="h-full">
+                                      <CardHeader>
+                                        <div className="mx-auto bg-primary/10 p-3 rounded-full mb-4">
+                                          <Briefcase className="w-8 h-8 text-primary"/>
+                                        </div>
+                                        <CardTitle className="text-xl">Streamline Communication</CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <p className="text-muted-foreground">Draft professional emails in seconds to manage customer inquiries and business correspondence with ease, saving you valuable time.</p>
+                                      </CardContent>
+                                  </Card>
+                              </div>
+                          </CarouselItem>
+                      </CarouselContent>
+                      <CarouselPrevious className="left-0 -translate-x-1/2" />
+                      <CarouselNext className="right-0 translate-x-1/2" />
+                    </Carousel>
+                  </div>
+              </div>
+          </section>
       </main>
-      <footer ref={footerRef} className="border-t border-border/40">
+      <footer className="border-t border-border/40">
         <div className="container mx-auto px-4 py-12 text-center">
-            <h3 className="text-xl font-bold text-foreground/90 mb-4">About ChaitanyaAI</h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-                ChaitanyaAI is dedicated to helping artisans and small businesses grow their digital presence with the power of AI. We provide easy-to-use tools to generate beautiful product descriptions, engaging social media content, and effective SEO keywords.
-            </p>
-            <Separator className="my-8 bg-border/40" />
             <p className="text-sm text-muted-foreground mb-6">Powered by Google Cloud's cutting-edge AI technology</p>
             <div className="flex justify-center items-center gap-8 flex-wrap">
                 <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
