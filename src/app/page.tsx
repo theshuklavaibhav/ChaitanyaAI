@@ -501,7 +501,10 @@ export default function Home() {
                 {(isStoryLoading || story) && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className="font-headline text-2xl">AI-Generated Brand Story</CardTitle>
+                      <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                        <BookUser className="w-6 h-6 text-primary" />
+                        AI-Generated Brand Story
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
                       {isStoryLoading ? (
@@ -524,7 +527,10 @@ export default function Home() {
                   <Card>
                     <CardHeader>
                       <div className="flex justify-between items-start gap-4 flex-wrap">
-                        <CardTitle className="font-headline text-2xl">AI-Generated Product Description</CardTitle>
+                        <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                           <Pencil className="w-6 h-6 text-primary" />
+                           AI-Generated Product Description
+                        </CardTitle>
                         <div className="flex-shrink-0 flex gap-2 flex-wrap">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -716,7 +722,10 @@ export default function Home() {
                 {(isCaptionsLoading || captions) && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className="font-headline text-2xl">AI-Generated Social Media Captions</CardTitle>
+                      <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                        <Bot className="w-6 h-6 text-primary" />
+                        AI-Generated Social Media Captions
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       {isCaptionsLoading ? (
