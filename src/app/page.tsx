@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ const languages = ['Hindi', 'Spanish', 'French'];
 
 export default function Home() {
   const { toast } = useToast();
+  const { setTheme } = useTheme()
   const [productName, setProductName] = useState('');
   const [brandName, setBrandName] = useState('');
   const [description, setDescription] = useState<string | null>(null);
@@ -293,13 +294,39 @@ setIsShopifyLoading(false);
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-       <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
-        <div className="container flex h-16 items-center">
-            <div className="flex items-center gap-3">
-              <Logo className="w-8 h-8 text-cyan-400" />
-              <h1 className="text-2xl font-bold text-white">
-                ChaitanyaAI
-              </h1>
+       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 items-center">
+            <div className="mr-4 hidden md:flex">
+              <a className="mr-6 flex items-center space-x-2" href="/">
+                <Logo className="w-8 h-8 text-primary" />
+                <span className="hidden font-bold sm:inline-block">
+                  ChaitanyaAI
+                </span>
+              </a>
+            </div>
+            <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+              <nav className="flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Toggle theme</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-background text-foreground border-border">
+                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    Dark
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                    System
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              </nav>
             </div>
         </div>
       </header>
@@ -308,11 +335,11 @@ setIsShopifyLoading(false);
         <section 
           className="container mx-auto px-4 py-20 lg:py-32 text-center relative"
         >
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/10 to-cyan-400/10 blur-3xl"></div>
-          <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight relative">
-              Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">ChaitanyaAi</span>
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/10 to-cyan-400/10 blur-3xl dark:from-blue-500/10 dark:to-cyan-400/10"></div>
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight relative bg-clip-text text-transparent bg-gradient-to-b from-foreground/80 to-foreground">
+              Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">ChaitanyaAI</span>
           </h1>
-          <p className="mt-4 text-lg md:text-2xl text-white/80 max-w-3xl mx-auto relative font-light">
+          <p className="mt-4 text-lg md:text-2xl text-foreground/60 max-w-3xl mx-auto relative font-light">
               Your Strategic AI Partner
           </p>
           <button
@@ -320,7 +347,7 @@ setIsShopifyLoading(false);
               className="mt-10 relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
             >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#70D5F3_0%,#3B82F6_50%,#70D5F3_100%)]" />
-              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-card px-8 py-1 text-sm font-medium text-foreground backdrop-blur-3xl">
                 Get Started
               </span>
             </button>
@@ -329,45 +356,45 @@ setIsShopifyLoading(false);
           <div ref={mainContentRef} className="container mx-auto px-4 pb-24">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               <div className="lg:col-span-4 space-y-8 sticky top-24">
-                <Card className="bg-slate-900/50 border-cyan-400/20">
+                <Card className="bg-card border-border">
                   <CardHeader>
-                    <CardTitle className="font-bold text-2xl text-white">Generate Your Content</CardTitle>
-                    <CardDescription className="text-white/60">
+                    <CardTitle className="font-bold text-2xl">Generate Your Content</CardTitle>
+                    <CardDescription className="text-muted-foreground">
                       Enter your business details and let our AI generate marketing content for you.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                   <div className="space-y-2">
-                      <Label htmlFor="brand-name" className="text-white/80">Brand / Founder Name</Label>
+                      <Label htmlFor="brand-name">Brand / Founder Name</Label>
                       <Input
                         id="brand-name"
                         placeholder="e.g., Priya's Kitchen"
                         value={brandName}
                         onChange={(e) => setBrandName(e.target.value)}
                         disabled={isLoading}
-                        className="bg-slate-800 border-slate-700 text-white"
+                        className="bg-background border-input"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="product-name" className="text-white/80">Product / Service / Industry</Label>
+                      <Label htmlFor="product-name">Product / Service / Industry</Label>
                       <Input
                         id="product-name"
                         placeholder="e.g., Homemade Pickles"
                         value={productName}
                         onChange={(e) => setProductName(e.target.value)}
                         disabled={isLoading}
-                        className="bg-slate-800 border-slate-700 text-white"
+                        className="bg-background border-input"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="caption-tone" className="text-white/80">Social Media Caption Tone</Label>
+                      <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
                       <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
-                        <SelectTrigger id="caption-tone" className="bg-slate-800 border-slate-700 text-white">
+                        <SelectTrigger id="caption-tone" className="bg-background border-input">
                           <SelectValue placeholder="Select a tone" />
                         </SelectTrigger>
-                        <SelectContent className="bg-slate-900 border-slate-700 text-white">
+                        <SelectContent className="bg-popover border-border text-popover-foreground">
                           {tones.map((tone) => (
-                            <SelectItem key={tone} value={tone} className="focus:bg-slate-800">
+                            <SelectItem key={tone} value={tone} className="focus:bg-accent">
                               {tone}
                             </SelectItem>
                           ))}
@@ -377,11 +404,11 @@ setIsShopifyLoading(false);
                   </CardContent>
                   <CardFooter className="flex flex-col gap-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                          <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-semibold">
+                          <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                               <Pencil className="mr-2 h-4 w-4" />
                               Description & Captions
                           </Button>
-                          <Button onClick={onGenerateStory} disabled={isLoading || !productName || !brandName} className="w-full bg-slate-800 hover:bg-slate-700 text-white" variant="secondary">
+                          <Button onClick={onGenerateStory} disabled={isLoading || !productName || !brandName} className="w-full" variant="secondary">
                               <BookUser className="mr-2 h-4 w-4" />
                               Generate Story
                           </Button>
@@ -393,18 +420,18 @@ setIsShopifyLoading(false);
                   </CardFooter>
                 </Card>
 
-                 <Card className="overflow-hidden bg-slate-900/50 border-cyan-400/20">
+                 <Card className="overflow-hidden bg-card border-border">
                     <CardHeader className="flex flex-row items-start justify-between">
                       <div className="flex items-center gap-3">
                           <ImageIcon className="w-6 h-6 text-muted-foreground" />
-                          <CardTitle className="font-bold text-2xl text-white">Product Preview</CardTitle>
+                          <CardTitle className="font-bold text-2xl">Product Preview</CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="aspect-video w-full relative rounded-lg overflow-hidden border border-cyan-400/20">
+                        <div className="aspect-video w-full relative rounded-lg overflow-hidden border border-border">
                           {isImageLoading ? (
-                            <div className="h-full w-full flex items-center justify-center bg-slate-900">
-                               <div className="text-center text-cyan-400/80">
+                            <div className="h-full w-full flex items-center justify-center bg-muted">
+                               <div className="text-center text-primary/80">
                                  <p>Generating your image...</p>
                                  <p className="text-xs">This may take a moment.</p>
                                </div>
@@ -421,7 +448,7 @@ setIsShopifyLoading(false);
                         </div>
                     </CardContent>
                     <CardFooter>
-                      <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} className="w-full bg-cyan-500 hover:bg-cyan-600 text-black font-semibold">
+                      <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                           <Sparkles className="mr-2 h-4 w-4" />
                           Generate Image
                       </Button>
@@ -432,61 +459,61 @@ setIsShopifyLoading(false);
               <div className="lg:col-span-8">
                 <div className="space-y-8">
                     {(isTrendsLoading || trends) && (
-                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                      <Card className="bg-card border-border">
                         <CardHeader>
-                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                            <Lightbulb className="w-6 h-6 text-cyan-400" />
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                            <Lightbulb className="w-6 h-6 text-primary" />
                             Market Trend Analysis
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
                           {isTrendsLoading ? (
                             <div className="space-y-4">
-                                <Skeleton className="h-8 w-1/3 bg-slate-800" />
+                                <Skeleton className="h-8 w-1/3 bg-muted" />
                                 <div className="flex flex-wrap gap-2">
-                                    <Skeleton className="h-6 w-20 bg-slate-800" />
-                                    <Skeleton className="h-6 w-24 bg-slate-800" />
-                                    <Skeleton className="h-6 w-16 bg-slate-800" />
+                                    <Skeleton className="h-6 w-20 bg-muted" />
+                                    <Skeleton className="h-6 w-24 bg-muted" />
+                                    <Skeleton className="h-6 w-16 bg-muted" />
                                 </div>
-                                <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
+                                <Skeleton className="h-8 w-1/3 mt-4 bg-muted" />
                                 <div className="flex gap-2">
-                                    <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
-                                    <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
-                                    <Skeleton className="h-10 w-10 rounded-full bg-slate-800" />
+                                    <Skeleton className="h-10 w-10 rounded-full bg-muted" />
+                                    <Skeleton className="h-10 w-10 rounded-full bg-muted" />
+                                    <Skeleton className="h-10 w-10 rounded-full bg-muted" />
                                 </div>
                             </div>
                           ) : (
                             trends && (
                                 <div className="space-y-6">
                                     <div>
-                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                             <Tag className="w-5 h-5 text-muted-foreground"/>
                                             Popular Keywords
                                         </h3>
                                         <div className="flex flex-wrap gap-2">
-                                            {trends.keywords.map(keyword => <Badge key={keyword} variant="secondary" className="bg-slate-800 text-white/80">{keyword}</Badge>)}
+                                            {trends.keywords.map(keyword => <Badge key={keyword} variant="secondary">{keyword}</Badge>)}
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                             <Palette className="w-5 h-5 text-muted-foreground"/>
                                             Trending Color Palette
                                         </h3>
                                         <div className="flex flex-wrap gap-4">
                                             {trends.colorPalette.map(color => (
                                                 <div key={color.hex} className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded-full border-2 border-slate-700" style={{ backgroundColor: color.hex }} />
-                                                    <span className="text-sm font-medium text-white/80">{color.name}</span>
+                                                    <div className="w-8 h-8 rounded-full border-2 border-border" style={{ backgroundColor: color.hex }} />
+                                                    <span className="text-sm font-medium text-foreground/80">{color.name}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
                                      <div>
-                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                             <TrendingUp className="w-5 h-5 text-muted-foreground"/>
                                             Style Suggestions
                                         </h3>
-                                        <ul className="list-disc list-inside space-y-2 text-white/80">
+                                        <ul className="list-disc list-inside space-y-2 text-foreground/80">
                                            {trends.styleSuggestions.map((suggestion, i) => <li key={i}>{suggestion}</li>)}
                                         </ul>
                                     </div>
@@ -498,59 +525,59 @@ setIsShopifyLoading(false);
                     )}
 
                     {(isStoryLoading || story) && (
-                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                      <Card className="bg-card border-border">
                         <CardHeader>
-                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                            <BookUser className="w-6 h-6 text-cyan-400" />
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                            <BookUser className="w-6 h-6 text-primary" />
                             AI-Generated Brand Story
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
                           {isStoryLoading ? (
                             <div className="space-y-2">
-                              <Skeleton className="h-4 w-full bg-slate-800" />
-                              <Skeleton className="h-4 w-full bg-slate-800" />
-                              <Skeleton className="h-4 w-5/6 bg-slate-800" />
-                              <Skeleton className="h-4 w-3/4 bg-slate-800" />
-                              <Skeleton className="h-4 w-full bg-slate-800" />
-                              <Skeleton className="h-4 w-4/6 bg-slate-800" />
+                              <Skeleton className="h-4 w-full bg-muted" />
+                              <Skeleton className="h-4 w-full bg-muted" />
+                              <Skeleton className="h-4 w-5/6 bg-muted" />
+                              <Skeleton className="h-4 w-3/4 bg-muted" />
+                              <Skeleton className="h-4 w-full bg-muted" />
+                              <Skeleton className="h-4 w-4/6 bg-muted" />
                             </div>
                           ) : (
-                            <p className="text-white/80 whitespace-pre-wrap leading-relaxed">{story}</p>
+                            <p className="text-foreground/80 whitespace-pre-wrap leading-relaxed">{story}</p>
                           )}
                         </CardContent>
                       </Card>
                     )}
 
                     {(isDescriptionLoading || description || isTranslating) && (
-                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                      <Card className="bg-card border-border">
                         <CardHeader>
                           <div className="flex justify-between items-start gap-4 flex-wrap">
-                            <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                               <Pencil className="w-6 h-6 text-cyan-400" />
+                            <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                               <Pencil className="w-6 h-6 text-primary" />
                                AI-Generated Product Description
                             </CardTitle>
                             <div className="flex-shrink-0 flex gap-2 flex-wrap">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="sm" disabled={!description || isTranslating} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
+                                    <Button variant="outline" size="sm" disabled={!description || isTranslating}>
                                       <Languages className="mr-2 h-4 w-4" />
                                       Translate
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="bg-slate-900 border-slate-700 text-white">
+                                  <DropdownMenuContent className="bg-popover border-border text-popover-foreground">
                                     {languages.map(lang => (
-                                      <DropdownMenuItem key={lang} onSelect={() => onTranslateDescription(lang)} className="focus:bg-slate-800">
+                                      <DropdownMenuItem key={lang} onSelect={() => onTranslateDescription(lang)} className="focus:bg-accent">
                                         {lang}
                                       </DropdownMenuItem>
                                     ))}
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                                 <Button variant="outline" size="sm" disabled={!description || isEtsyLoading} onClick={onGenerateEtsy} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
+                                 <Button variant="outline" size="sm" disabled={!description || isEtsyLoading} onClick={onGenerateEtsy}>
                                     <Sparkles className="mr-2 h-4 w-4" />
                                     Etsy
                                 </Button>
-                                 <Button variant="outline" size="sm" disabled={!description || isShopifyLoading} onClick={onGenerateShopify} className="bg-slate-800 border-slate-700 hover:bg-slate-700 text-white">
+                                 <Button variant="outline" size="sm" disabled={!description || isShopifyLoading} onClick={onGenerateShopify}>
                                     <Sparkles className="mr-2 h-4 w-4" />
                                     Shopify
                                 </Button>
@@ -560,38 +587,38 @@ setIsShopifyLoading(false);
                         <CardContent>
                           {isDescriptionLoading || isTranslating ? (
                             <div className="space-y-2">
-                              <Skeleton className="h-4 w-full bg-slate-800" />
-                              <Skeleton className="h-4 w-full bg-slate-800" />
-                              <Skeleton className="h-4 w-5/6 bg-slate-800" />
-                              <Skeleton className="h-4 w-3/4 bg-slate-800" />
+                              <Skeleton className="h-4 w-full bg-muted" />
+                              <Skeleton className="h-4 w-full bg-muted" />
+                              <Skeleton className="h-4 w-5/6 bg-muted" />
+                              <Skeleton className="h-4 w-3/4 bg-muted" />
                             </div>
                           ) : (
-                            <p className="text-white/80 whitespace-pre-wrap leading-relaxed">{description}</p>
+                            <p className="text-foreground/80 whitespace-pre-wrap leading-relaxed">{description}</p>
                           )}
                         </CardContent>
                       </Card>
                     )}
 
                     {(isEtsyLoading || etsyListing) && (
-                        <Card className="bg-slate-900/50 border-cyan-400/20">
+                        <Card className="bg-card border-border">
                             <CardHeader>
-                                <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                                    <Sparkles className="w-6 h-6 text-cyan-400" />
+                                <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                                    <Sparkles className="w-6 h-6 text-primary" />
                                     Etsy Listing Optimization
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {isEtsyLoading ? (
                                    <div className="space-y-4">
-                                        <Skeleton className="h-8 w-1/3 bg-slate-800" />
-                                        <Skeleton className="h-6 w-full bg-slate-800" />
-                                        <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
+                                        <Skeleton className="h-8 w-1/3 bg-muted" />
+                                        <Skeleton className="h-6 w-full bg-muted" />
+                                        <Skeleton className="h-8 w-1/3 mt-4 bg-muted" />
                                         <div className="flex flex-wrap gap-2">
-                                            <Skeleton className="h-6 w-20 bg-slate-800" />
-                                            <Skeleton className="h-6 w-24 bg-slate-800" />
-                                            <Skeleton className="h-6 w-16 bg-slate-800" />
-                                            <Skeleton className="h-6 w-20 bg-slate-800" />
-                                            <Skeleton className="h-6 w-24 bg-slate-800" />
+                                            <Skeleton className="h-6 w-20 bg-muted" />
+                                            <Skeleton className="h-6 w-24 bg-muted" />
+                                            <Skeleton className="h-6 w-16 bg-muted" />
+                                            <Skeleton className="h-6 w-20 bg-muted" />
+                                            <Skeleton className="h-6 w-24 bg-muted" />
                                         </div>
                                     </div>
                                 ) : (
@@ -599,11 +626,11 @@ setIsShopifyLoading(false);
                                         <TooltipProvider>
                                             <div className="space-y-6">
                                                 <div>
-                                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                                         Etsy Title
                                                     </Label>
                                                     <div className="relative">
-                                                        <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-slate-800 border-slate-700 text-white" />
+                                                        <Input readOnly value={etsyListing.etsyTitle} className="pr-10 bg-background border-input" />
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
                                                                 <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(etsyListing.etsyTitle, 'etsy-title')}>
@@ -617,13 +644,13 @@ setIsShopifyLoading(false);
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                                    <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                                         <Tag className="w-5 h-5 text-muted-foreground"/>
                                                         Etsy Tags
                                                     </h3>
                                                     <div className="flex flex-wrap gap-2">
                                                         {etsyListing.etsyTags.map(tag => (
-                                                            <Badge key={tag} variant="secondary" className="cursor-pointer bg-slate-800 text-white/80" onClick={() => copyToClipboard(tag, `etsy-tag-${tag}`)}>
+                                                            <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => copyToClipboard(tag, `etsy-tag-${tag}`)}>
                                                                 {tag}
                                                                 {copied === `etsy-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
                                                             </Badge>
@@ -639,25 +666,25 @@ setIsShopifyLoading(false);
                     )}
 
                     {(isShopifyLoading || shopifyListing) && (
-                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                      <Card className="bg-card border-border">
                         <CardHeader>
-                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                            <Sparkles className="w-6 h-6 text-cyan-400" />
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                            <Sparkles className="w-6 h-6 text-primary" />
                             Shopify Listing Optimization
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
                           {isShopifyLoading ? (
                             <div className="space-y-4">
-                                <Skeleton className="h-8 w-1/3 bg-slate-800" />
-                                <Skeleton className="h-6 w-full bg-slate-800" />
-                                <Skeleton className="h-8 w-1/3 mt-4 bg-slate-800" />
-                                <Skeleton className="h-10 w-full bg-slate-800" />
-                                <Skeleton className="h-8 w-1_3 mt-4 bg-slate-800" />
+                                <Skeleton className="h-8 w-1/3 bg-muted" />
+                                <Skeleton className="h-6 w-full bg-muted" />
+                                <Skeleton className="h-8 w-1/3 mt-4 bg-muted" />
+                                <Skeleton className="h-10 w-full bg-muted" />
+                                <Skeleton className="h-8 w-1_3 mt-4 bg-muted" />
                                 <div className="flex flex-wrap gap-2">
-                                    <Skeleton className="h-6 w-20 bg-slate-800" />
-                                    <Skeleton className="h-6 w-24 bg-slate-800" />
-                                    <Skeleton className="h-6 w-16 bg-slate-800" />
+                                    <Skeleton className="h-6 w-20 bg-muted" />
+                                    <Skeleton className="h-6 w-24 bg-muted" />
+                                    <Skeleton className="h-6 w-16 bg-muted" />
                                 </div>
                             </div>
                           ) : (
@@ -665,11 +692,11 @@ setIsShopifyLoading(false);
                               <TooltipProvider>
                                 <div className="space-y-6">
                                   <div>
-                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                       Shopify Title
                                     </Label>
                                     <div className="relative">
-                                      <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-slate-800 border-slate-700 text-white" />
+                                      <Input readOnly value={shopifyListing.shopifyTitle} className="pr-10 bg-background border-input" />
                                       <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button variant="ghost" size="icon" className="absolute top-1/2 right-1 -translate-y-1/2 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyTitle, 'shopify-title')}>
@@ -681,11 +708,11 @@ setIsShopifyLoading(false);
                                     </div>
                                   </div>
                                   <div>
-                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                    <Label className="text-base font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                       Shopify Meta Description
                                     </Label>
                                     <div className="relative">
-                                      <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-slate-800 border-slate-700 text-white" rows={3} />
+                                      <Textarea readOnly value={shopifyListing.shopifyMetaDescription} className="pr-10 bg-background border-input" rows={3} />
                                        <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(shopifyListing.shopifyMetaDescription, 'shopify-desc')}>
@@ -697,13 +724,13 @@ setIsShopifyLoading(false);
                                     </div>
                                   </div>
                                   <div>
-                                    <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-white/90">
+                                    <h3 className="text-base font-semibold flex items-center gap-2 mb-2 text-foreground/90">
                                       <Tag className="w-5 h-5 text-muted-foreground" />
                                       Shopify Tags
                                     </h3>
                                     <div className="flex flex-wrap gap-2">
                                       {shopifyListing.shopifyTags.map(tag => (
-                                        <Badge key={tag} variant="secondary" className="cursor-pointer bg-slate-800 text-white/80" onClick={() => copyToClipboard(tag, `shopify-tag-${tag}`)}>
+                                        <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => copyToClipboard(tag, `shopify-tag-${tag}`)}>
                                           {tag}
                                           {copied === `shopify-tag-${tag}` ? <Check className="w-3 h-3 ml-1 text-green-500"/> : <Copy className="w-3 h-3 ml-1 opacity-50"/> }
                                         </Badge>
@@ -719,10 +746,10 @@ setIsShopifyLoading(false);
                     )}
 
                     {(isCaptionsLoading || captions) && (
-                      <Card className="bg-slate-900/50 border-cyan-400/20">
+                      <Card className="bg-card border-border">
                         <CardHeader>
-                          <CardTitle className="font-bold text-2xl flex items-center gap-2 text-white">
-                            <Bot className="w-6 h-6 text-cyan-400" />
+                          <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                            <Bot className="w-6 h-6 text-primary" />
                             AI-Generated Social Media Captions
                           </CardTitle>
                         </CardHeader>
@@ -730,20 +757,20 @@ setIsShopifyLoading(false);
                           {isCaptionsLoading ? (
                             Array.from({ length: 3 }).map((_, i) => (
                               <div key={i} className="flex items-start gap-4">
-                                <Skeleton className="h-8 w-8 rounded-full bg-slate-800" />
+                                <Skeleton className="h-8 w-8 rounded-full bg-muted" />
                                 <div className="flex-1 space-y-2">
-                                  <Skeleton className="h-4 w-full bg-slate-800" />
-                                  <Skeleton className="h-4 w-4/5 bg-slate-800" />
+                                  <Skeleton className="h-4 w-full bg-muted" />
+                                  <Skeleton className="h-4 w-4/5 bg-muted" />
                                 </div>
                               </div>
                             ))
                           ) : (
                             captions?.map((caption, index) => (
-                              <div key={index} className="flex items-start gap-4 p-4 border border-cyan-400/20 rounded-lg bg-slate-900">
-                                <div className="p-2 bg-cyan-500 rounded-full">
-                                   <Bot className="w-5 h-5 text-slate-900" />
+                              <div key={index} className="flex items-start gap-4 p-4 border border-border rounded-lg bg-background">
+                                <div className="p-2 bg-primary rounded-full">
+                                   <Bot className="w-5 h-5 text-primary-foreground" />
                                 </div>
-                                <p className="flex-1 text-white/80">{caption}</p>
+                                <p className="flex-1 text-foreground/80">{caption}</p>
                               </div>
                             ))
                           )}
@@ -765,4 +792,4 @@ setIsShopifyLoading(false);
   );
 
     
-    
+} 
