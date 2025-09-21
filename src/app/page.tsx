@@ -10,12 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, type Tone } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const tones: Tone[] = ['Persuasive', 'Creative', 'Professional'];
+const tones = ['Persuasive', 'Creative', 'Professional'] as const;
+type Tone = (typeof tones)[number];
 
 export default function Home() {
   const { toast } = useToast();
@@ -115,20 +116,6 @@ export default function Home() {
       setGeneratedImageUrl(result.data);
     }
   }
-
-  const onGenerateAll = () => {
-    if (!productName) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product name.',
-      });
-      return;
-    }
-    onGenerateDescription();
-    onGenerateCaptions();
-    onGenerateImage();
-  };
 
   const onGenerateContent = () => {
     if (!productName) {
