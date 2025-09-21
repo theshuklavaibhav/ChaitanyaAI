@@ -7,6 +7,7 @@ import { generateImage } from '@/ai/flows/generate-image';
 import { generateBrandStory } from '@/ai/flows/generate-brand-story';
 import { analyzeMarketTrends } from '@/ai/flows/analyze-market-trends';
 import { translateContent } from '@/ai/flows/translate-content';
+import { generateEtsyListing } from '@/ai/flows/generate-etsy-listing';
 
 const productSchema = z.object({
   productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
@@ -20,6 +21,11 @@ const storySchema = z.object({
 const translateSchema = z.object({
   content: z.string().min(1, { message: 'Content to translate cannot be empty.' }),
   targetLanguage: z.string().min(2, { message: 'Target language must be specified.' }),
+});
+
+const etsySchema = z.object({
+  productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
+  productDescription: z.string().min(10, { message: 'Product description must be at least 10 characters.' }),
 });
 
 export async function handleGenerateDescription(productName: string) {
@@ -118,5 +124,21 @@ export async function handleTranslate(content: string, targetLanguage: string) {
   } catch (e) {
     console.error(e);
     return { error: `Failed to translate content to ${targetLanguage}. Please try again.` };
+  }
+}
+
+export async function handleGenerateEtsyListing(productName: string, productDescription: string) {
+  const validation = etsySchema.safeParse({ productName, productDescription });
+
+  if (!validation.success) {
+    return { error: validation.error.errors[0].message };
+  }
+
+  try {
+    const result = await generateEtsyListing(validation.data);
+    return { data: result };
+  } catch (e) {
+    console.error(e);
+    return { error: 'Failed to generate Etsy listing. Please try again.' };
   }
 }
