@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu } from 'lucide-react';
+import { Sparkles, Bot, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
@@ -11,9 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory, handleAnalyzeTrends, handleTranslate, handleGenerateEtsyListing, handleGenerateShopifyListing } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateStory, handleAnalyzeTrends, handleTranslate, handleGenerateEtsyListing, handleGenerateShopifyListing } from '@/app/actions';
 import { Logo } from '@/components/icons';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import type { AnalyzeMarketTrendsOutput } from '@/ai/flows/analyze-market-trends';
@@ -42,30 +41,18 @@ export default function Home() {
   const [shopifyListing, setShopifyListing] = useState<GenerateShopifyListingOutput | null>(null);
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
-  const [isImageLoading, setIsImageLoading] = useState(false);
   const [isStoryLoading, setIsStoryLoading] = useState(false);
   const [isTrendsLoading, setIsTrendsLoading] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isEtsyLoading, setIsEtsyLoading] = useState(false);
   const [isShopifyLoading, setIsShopifyLoading] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
   const mainContentRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const defaultImage = PlaceHolderImages[0];
-  const [displayImageUrl, setDisplayImageUrl] = useState<string>(defaultImage.imageUrl);
   const [copied, setCopied] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (generatedImageUrl) {
-      setDisplayImageUrl(generatedImageUrl);
-    } else {
-      setDisplayImageUrl(defaultImage.imageUrl);
-    }
-  }, [generatedImageUrl, defaultImage.imageUrl]);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -134,30 +121,6 @@ export default function Home() {
       setCaptions(result.data ?? null);
     }
   };
-
-  const onGenerateImage = async () => {
-    if (!productName) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product or service name.',
-      });
-      return;
-    }
-    setIsImageLoading(true);
-    setGeneratedImageUrl(null);
-    const result = await handleGenerateImage(productName);
-    setIsImageLoading(false);
-    if (result.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: result.error,
-      });
-    } else if (result.data) {
-      setGeneratedImageUrl(result.data);
-    }
-  }
 
   const onGenerateStory = async () => {
     if (!brandName || !productName) {
@@ -297,7 +260,7 @@ setIsShopifyLoading(false);
   }
 
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading || isShopifyLoading;
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading || isShopifyLoading;
 
   const navLinks = (
     <>
@@ -455,42 +418,6 @@ setIsShopifyLoading(false);
                           Analyze Market Trends
                       </Button>
                   </CardFooter>
-                </Card>
-
-                 <Card className="overflow-hidden bg-card border-border">
-                    <CardHeader className="flex flex-row items-start justify-between">
-                      <div className="flex items-center gap-3">
-                          <ImageIcon className="w-6 h-6 text-muted-foreground" />
-                          <CardTitle className="font-bold text-2xl">Product Preview</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="aspect-video w-full relative rounded-lg overflow-hidden border border-border">
-                          {isImageLoading ? (
-                            <div className="h-full w-full flex flex-col items-center justify-center bg-muted/50">
-                               <Sparkles className="w-8 h-8 text-primary animate-spin" />
-                               <div className="text-center text-primary/80 mt-4">
-                                 <p className="font-semibold">Generating your image...</p>
-                                 <p className="text-xs">This may take a moment.</p>
-                               </div>
-                            </div>
-                          ) : (
-                            <Image 
-                                src={displayImageUrl}
-                                alt={productName || 'Product or service'}
-                                fill
-                                className="object-cover"
-                                data-ai-hint={defaultImage.imageHint}
-                            />
-                          )}
-                        </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                          <Sparkles className="mr-2 h-4 w-4" />
-                          Generate Image
-                      </Button>
-                    </CardFooter>
                 </Card>
               </div>
               

@@ -3,7 +3,6 @@
 import { z } from 'zod';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
 import { generateSocialMediaCaptions, type GenerateSocialMediaCaptionsInput } from '@/ai/flows/generate-social-media-captions';
-import { generateImage } from '@/ai/flows/generate-image';
 import { generateBrandStory } from '@/ai/flows/generate-brand-story';
 import { analyzeMarketTrends } from '@/ai/flows/analyze-market-trends';
 import { translateContent } from '@/ai/flows/translate-content';
@@ -60,25 +59,6 @@ export async function handleGenerateCaptions(productName: string, tone: Generate
     console.error(e);
     return { error: 'Failed to generate captions. Please try again.' };
   }
-}
-
-export async function handleGenerateImage(productName: string) {
-    const validation = productSchema.safeParse({ productName });
-  
-    if (!validation.success) {
-      return { error: validation.error.errors[0].message };
-    }
-  
-    try {
-      const result = await generateImage({ productName: validation.data.productName });
-      if (!result.imageUrl) {
-        return { error: 'Failed to generate image. Please try a different product name.' };
-      }
-      return { data: result.imageUrl };
-    } catch (e) {
-      console.error(e);
-      return { error: 'Failed to generate image. The generation model may be overloaded. Please try again in a moment.' };
-    }
 }
 
 export async function handleGenerateStory(brandName: string, businessType: string) {
