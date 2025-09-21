@@ -8,6 +8,7 @@ import { analyzeMarketTrends } from '@/ai/flows/analyze-market-trends';
 import { translateContent } from '@/ai/flows/translate-content';
 import { generateEtsyListing } from '@/ai/flows/generate-etsy-listing';
 import { generateShopifyListing } from '@/ai/flows/generate-shopify-listing';
+import { generateEmailReply, type GenerateEmailReplyInput } from '@/ai/flows/generate-email-reply';
 
 const productSchema = z.object({
   productName: z.string().min(2, { message: 'Product/service name must be at least 2 characters.' }),
@@ -26,6 +27,11 @@ const translateSchema = z.object({
 const listingSchema = z.object({
   productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
   productDescription: z.string().min(10, { message: 'Product description must be at least 10 characters.' }),
+});
+
+const emailSchema = z.object({
+  emailTopic: z.string().min(5, { message: 'Email topic must be at least 5 characters.' }),
+  tone: z.enum(['Formal', 'Friendly', 'Direct']),
 });
 
 
@@ -138,5 +144,21 @@ export async function handleGenerateShopifyListing(productName: string, productD
   } catch (e) {
     console.error(e);
     return { error: 'Failed to generate Shopify listing. Please try again.' };
+  }
+}
+
+export async function handleGenerateEmail(emailTopic: string, tone: GenerateEmailReplyInput['tone']) {
+  const validation = emailSchema.safeParse({ emailTopic, tone });
+
+  if (!validation.success) {
+    return { error: validation.error.errors[0].message };
+  }
+
+  try {
+    const result = await generateEmailReply({ emailTopic: validation.data.emailTopic, tone });
+    return { data: result.emailBody };
+  } catch (e) {
+    console.error(e);
+    return { error: 'Failed to generate email. Please try again.' };
   }
 }

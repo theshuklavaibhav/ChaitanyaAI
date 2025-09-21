@@ -8,3 +8,4 @@ import '@/ai/flows/analyze-market-trends.ts';
 import '@/ai/flows/translate-content.ts';
 import '@/ai/flows/generate-etsy-listing.ts';
 import '@/ai/flows/generate-shopify-listing.ts';
+import '@/ai/flows/generate-email-reply.ts';

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu } from 'lucide-react';
+import { Sparkles, Bot, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu, Mail } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateStory, handleAnalyzeTrends, handleTranslate, handleGenerateEtsyListing, handleGenerateShopifyListing } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateStory, handleAnalyzeTrends, handleTranslate, handleGenerateEtsyListing, handleGenerateShopifyListing, handleGenerateEmail } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +27,8 @@ import { Separator } from '@/components/ui/separator';
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
 const languages = ['Hindi', 'Spanish', 'French'];
+const emailTones = ['Formal', 'Friendly', 'Direct'] as const;
+type EmailTone = (typeof emailTones)[number];
 
 export default function Home() {
   const { toast } = useToast();
@@ -39,6 +41,10 @@ export default function Home() {
   const [trends, setTrends] = useState<AnalyzeMarketTrendsOutput | null>(null);
   const [etsyListing, setEtsyListing] = useState<GenerateEtsyListingOutput | null>(null);
   const [shopifyListing, setShopifyListing] = useState<GenerateShopifyListingOutput | null>(null);
+  const [emailTopic, setEmailTopic] = useState('');
+  const [emailTone, setEmailTone] = useState<EmailTone>('Friendly');
+  const [generatedEmail, setGeneratedEmail] = useState<string | null>(null);
+
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
   const [isStoryLoading, setIsStoryLoading] = useState(false);
@@ -46,6 +52,8 @@ export default function Home() {
   const [isTranslating, setIsTranslating] = useState(false);
   const [isEtsyLoading, setIsEtsyLoading] = useState(false);
   const [isShopifyLoading, setIsShopifyLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -245,6 +253,30 @@ setIsShopifyLoading(false);
     }
   }
 
+  const onGenerateEmail = async () => {
+    if (!emailTopic) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Please enter an email topic.',
+      });
+      return;
+    }
+    setIsEmailLoading(true);
+    setGeneratedEmail(null);
+    const result = await handleGenerateEmail(emailTopic, emailTone);
+    setIsEmailLoading(false);
+    if (result.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: result.error,
+      });
+    } else if (result.data) {
+      setGeneratedEmail(result.data);
+    }
+  };
+
 
   const onGenerateContent = () => {
     if (!productName) {
@@ -260,7 +292,7 @@ setIsShopifyLoading(false);
   }
 
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading || isShopifyLoading;
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading || isShopifyLoading || isEmailLoading;
 
   const navLinks = (
     <>
@@ -354,11 +386,11 @@ setIsShopifyLoading(false);
         </section>
 
           <div ref={mainContentRef} className="container mx-auto px-4 pb-24">
-            <div className="flex flex-col items-center gap-8">
-              <div className="w-full max-w-xl space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+              <div className="w-full space-y-8">
                 <Card className="bg-card border-border">
                   <CardHeader>
-                    <CardTitle className="font-bold text-2xl">Generate Your Content</CardTitle>
+                    <CardTitle className="font-bold text-2xl">Generate Marketing Content</CardTitle>
                     <CardDescription className="text-muted-foreground">
                       Enter your business details and let our AI generate marketing content for you.
                     </CardDescription>
@@ -419,9 +451,48 @@ setIsShopifyLoading(false);
                       </Button>
                   </CardFooter>
                 </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-bold text-2xl">AI Email Responder</CardTitle>
+                    <CardDescription>
+                      Draft professional emails in seconds. Just provide the topic and tone.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email-topic">Email Topic</Label>
+                      <Input
+                        id="email-topic"
+                        placeholder="e.g., Follow up on invoice #123"
+                        value={emailTopic}
+                        onChange={(e) => setEmailTopic(e.target.value)}
+                        disabled={isLoading}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email-tone">Tone</Label>
+                      <Select value={emailTone} onValueChange={(value: EmailTone) => setEmailTone(value)} disabled={isLoading}>
+                        <SelectTrigger id="email-tone">
+                          <SelectValue placeholder="Select a tone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {emailTones.map((tone) => (
+                            <SelectItem key={tone} value={tone}>{tone}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button onClick={onGenerateEmail} disabled={isLoading || !emailTopic} className="w-full">
+                      <Mail className="mr-2 h-4 w-4" />
+                      Generate Email
+                    </Button>
+                  </CardFooter>
+                </Card>
               </div>
               
-              <div className="w-full max-w-4xl">
+              <div className="w-full max-w-4xl md:max-w-none">
                 <div className="space-y-8">
                     {(isTrendsLoading || trends) && (
                       <Card className="bg-card border-border">
@@ -512,6 +583,43 @@ setIsShopifyLoading(false);
                           )}
                         </CardContent>
                       </Card>
+                    )}
+
+                    {(isEmailLoading || generatedEmail) && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="font-bold text-2xl flex items-center gap-2">
+                                    <Mail className="w-6 h-6 text-primary" />
+                                    Generated Email Draft
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {isEmailLoading ? (
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-1/4" />
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-3/4" />
+                                    </div>
+                                ) : (
+                                    generatedEmail && (
+                                        <div className="relative">
+                                            <Textarea readOnly value={generatedEmail} className="pr-10 bg-background border-input" rows={10} />
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="absolute top-2 right-1 h-8 w-8" onClick={() => copyToClipboard(generatedEmail, 'email')}>
+                                                            {copied === 'email' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent><p>Copy Email</p></TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    )
+                                )}
+                            </CardContent>
+                        </Card>
                     )}
 
                     {(isDescriptionLoading || description || isTranslating) && (
