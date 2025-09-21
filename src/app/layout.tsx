@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'BrandSpark - AI Assistant for Small Business',
+  title: 'ChaitanyaAI - AI Assistant for Small Business',
   description: 'AI-powered content generation for small businesses, MSMEs, and entrepreneurs.',
 };
 
