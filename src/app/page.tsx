@@ -205,7 +205,7 @@ export default function Home() {
                         <div className="h-full w-full flex items-center justify-center bg-muted">
                            <div className="text-center text-muted-foreground">
                              <p>Generating your image...</p>
-                             <p className="text-xs">This may take a moment.</p>
+                             <p className="text-xs">This may take a moment. If it fails, please check your API key.</p>
                            </div>
                         </div>
                       ) : (
