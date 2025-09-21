@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -21,11 +21,14 @@ type Tone = (typeof tones)[number];
 export default function Home() {
   const { toast } = useToast();
   const [productName, setProductName] = useState('');
+  const [artisanName, setArtisanName] = useState('');
   const [description, setDescription] = useState<string | null>(null);
   const [captions, setCaptions] = useState<string[] | null>(null);
+  const [story, setStory] = useState<string | null>(null);
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [isStoryLoading, setIsStoryLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
@@ -117,6 +120,30 @@ export default function Home() {
     }
   }
 
+  const onGenerateStory = async () => {
+    if (!artisanName || !productName) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Please enter both an artisan and product name.',
+      });
+      return;
+    }
+    setIsStoryLoading(true);
+    setStory(null);
+    const result = await handleGenerateStory(artisanName, productName);
+    setIsStoryLoading(false);
+    if (result.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: result.error,
+      });
+    } else if (result.data) {
+      setStory(result.data);
+    }
+  }
+
   const onGenerateContent = () => {
     if (!productName) {
       toast({
@@ -131,7 +158,7 @@ export default function Home() {
   }
 
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading;
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -153,12 +180,22 @@ export default function Home() {
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
               <CardDescription>
-                Enter your product name and let our AI generate content for you.
+                Enter your product and artisan name, and let our AI generate content for you.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="artisan-name">Artisan Name</Label>
+                <Input
+                  id="artisan-name"
+                  placeholder="e.g., Priya Singh"
+                  value={artisanName}
+                  onChange={(e) => setArtisanName(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="product-name">Product Name</Label>
+                <Label htmlFor="product-name">Product Name / Craft Type</Label>
                 <Input
                   id="product-name"
                   placeholder="e.g., Handwoven Pashmina Scarf"
@@ -168,7 +205,7 @@ export default function Home() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="caption-tone">Caption Tone</Label>
+                <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
                 <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
                   <SelectTrigger id="caption-tone">
                     <SelectValue placeholder="Select a tone" />
@@ -186,7 +223,11 @@ export default function Home() {
             <CardFooter className="flex flex-col sm:flex-row gap-4">
                <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full">
                 <Pencil className="mr-2 h-4 w-4" />
-                Generate Content
+                Generate Description & Captions
+              </Button>
+              <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full">
+                <BookUser className="mr-2 h-4 w-4" />
+                Generate Story
               </Button>
             </CardFooter>
           </Card>
@@ -227,10 +268,32 @@ export default function Home() {
                 </CardFooter>
             </Card>
 
+            {(isStoryLoading || story) && (
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="font-headline text-2xl">AI-Generated Brand Story</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isStoryLoading ? (
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-4/6" />
+                    </div>
+                  ) : (
+                    <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">{story}</p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {(isDescriptionLoading || description) && (
               <Card className="shadow-lg">
                 <CardHeader>
-                  <CardTitle className="font-headline text-2xl">AI-Generated Description</CardTitle>
+                  <CardTitle className="font-headline text-2xl">AI-Generated Product Description</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {isDescriptionLoading ? (
