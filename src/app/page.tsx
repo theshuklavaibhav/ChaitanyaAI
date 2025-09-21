@@ -328,14 +328,14 @@ setIsShopifyLoading(false);
             
             <div className="flex flex-1 items-center justify-end space-x-2">
               <a href="https://github.com/GoogleCloudPlatform/firebase-studio-templates" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" suppressHydrationWarning>
+                <Button variant="ghost" size="icon">
                   <Github className="h-5 w-5" />
                   <span className="sr-only">GitHub</span>
                 </Button>
               </a>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" suppressHydrationWarning>
+                  <Button variant="ghost" size="icon">
                     <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     <span className="sr-only">Toggle theme</span>
@@ -377,15 +377,14 @@ setIsShopifyLoading(false);
           className="container mx-auto px-4 py-16 md:py-20 lg:py-32 text-center relative"
         >
           <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/10 to-cyan-400/10 blur-3xl dark:from-blue-500/10 dark:to-cyan-400/10"></div>
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight relative bg-clip-text text-transparent bg-gradient-to-b from-foreground/80 to-foreground" suppressHydrationWarning>
+          <h1 suppressHydrationWarning className="text-4xl md:text-6xl font-bold leading-tight relative bg-clip-text text-transparent bg-gradient-to-b from-foreground/80 to-foreground">
               Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">ChaitanyaAI</span>
           </h1>
-          <div className="mt-4 text-lg md:text-2xl text-foreground/60 max-w-3xl mx-auto relative font-light" suppressHydrationWarning>
+          <div className="mt-4 text-lg md:text-2xl text-foreground/60 max-w-3xl mx-auto relative font-light">
              AI-powered content generation for small businesses, MSMEs, and entrepreneurs.
           </div>
           <button
               onClick={scrollToContent}
-              suppressHydrationWarning
               className="mt-10 relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
             >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#70D5F3_0%,#3B82F6_50%,#70D5F3_100%)]" />
@@ -415,7 +414,6 @@ setIsShopifyLoading(false);
                         onChange={(e) => setBrandName(e.target.value)}
                         disabled={isLoading}
                         className="bg-background border-input"
-                        suppressHydrationWarning
                       />
                     </div>
                     <div className="space-y-2">
@@ -427,13 +425,12 @@ setIsShopifyLoading(false);
                         onChange={(e) => setProductName(e.target.value)}
                         disabled={isLoading}
                         className="bg-background border-input"
-                        suppressHydrationWarning
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
                       <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
-                        <SelectTrigger id="caption-tone" className="bg-background border-input" suppressHydrationWarning>
+                        <SelectTrigger id="caption-tone" className="bg-background border-input">
                           <SelectValue placeholder="Select a tone" />
                         </SelectTrigger>
                         <SelectContent className="bg-popover border-border text-popover-foreground">
