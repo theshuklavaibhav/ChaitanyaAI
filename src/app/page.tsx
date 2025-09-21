@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,15 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory, handleAnalyzeTrends } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory, handleAnalyzeTrends, handleTranslate } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import type { AnalyzeMarketTrendsOutput } from '@/ai/flows/analyze-market-trends';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
+const languages = ['Hindi', 'Spanish', 'French'];
 
 export default function Home() {
   const { toast } = useToast();
@@ -33,6 +35,7 @@ export default function Home() {
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isStoryLoading, setIsStoryLoading] = useState(false);
   const [isTrendsLoading, setIsTrendsLoading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
@@ -172,6 +175,33 @@ export default function Home() {
     }
   }
 
+  const onTranslateDescription = async (language: string) => {
+    if (!description) {
+      toast({
+        variant: 'destructive',
+        title: 'Nothing to translate',
+        description: 'Please generate a description first.',
+      });
+      return;
+    }
+    setIsTranslating(true);
+    const result = await handleTranslate(description, language);
+    setIsTranslating(false);
+    if (result.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: result.error,
+      });
+    } else if (result.data) {
+      setDescription(result.data);
+      toast({
+        title: 'Success',
+        description: `Description translated to ${language}.`,
+      });
+    }
+  };
+
   const onGenerateContent = () => {
     if (!productName) {
       toast({
@@ -186,7 +216,7 @@ export default function Home() {
   }
 
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading;
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading || isTranslating;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -390,13 +420,30 @@ export default function Home() {
               </Card>
             )}
 
-            {(isDescriptionLoading || description) && (
+            {(isDescriptionLoading || description || isTranslating) && (
               <Card className="shadow-lg">
                 <CardHeader>
-                  <CardTitle className="font-headline text-2xl">AI-Generated Product Description</CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="font-headline text-2xl">AI-Generated Product Description</CardTitle>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" disabled={!description || isTranslating}>
+                          <Languages className="mr-2 h-4 w-4" />
+                          Translate
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {languages.map(lang => (
+                          <DropdownMenuItem key={lang} onSelect={() => onTranslateDescription(lang)}>
+                            {lang}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  {isDescriptionLoading ? (
+                  {isDescriptionLoading || isTranslating ? (
                     <div className="space-y-2">
                       <Skeleton className="h-4 w-full" />
                       <Skeleton className="h-4 w-full" />

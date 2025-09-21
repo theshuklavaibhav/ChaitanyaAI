@@ -6,6 +6,7 @@ import { generateSocialMediaCaptions, type GenerateSocialMediaCaptionsInput } fr
 import { generateImage } from '@/ai/flows/generate-image';
 import { generateBrandStory } from '@/ai/flows/generate-brand-story';
 import { analyzeMarketTrends } from '@/ai/flows/analyze-market-trends';
+import { translateContent } from '@/ai/flows/translate-content';
 
 const productSchema = z.object({
   productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
@@ -14,6 +15,11 @@ const productSchema = z.object({
 const storySchema = z.object({
     artisanName: z.string().min(2, { message: 'Artisan name must be at least 2 characters.' }),
     craftType: z.string().min(2, { message: 'Product name must be at least 2 characters to infer craft type.' }),
+});
+
+const translateSchema = z.object({
+  content: z.string().min(1, { message: 'Content to translate cannot be empty.' }),
+  targetLanguage: z.string().min(2, { message: 'Target language must be specified.' }),
 });
 
 export async function handleGenerateDescription(productName: string) {
@@ -97,4 +103,20 @@ export async function handleAnalyzeTrends(craftType: string) {
         console.error(e);
         return { error: 'Failed to analyze trends. Please try again.' };
     }
+}
+
+export async function handleTranslate(content: string, targetLanguage: string) {
+  const validation = translateSchema.safeParse({ content, targetLanguage });
+
+  if (!validation.success) {
+    return { error: validation.error.errors[0].message };
+  }
+
+  try {
+    const result = await translateContent(validation.data);
+    return { data: result.translatedContent };
+  } catch (e) {
+    console.error(e);
+    return { error: `Failed to translate content to ${targetLanguage}. Please try again.` };
+  }
 }
