@@ -10,8 +10,13 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+const tones = ['Persuasive', 'Creative', 'Professional'] as const;
+const TonesEnum = z.enum(tones);
+export type Tone = z.infer<typeof TonesEnum>;
+
 const GenerateSocialMediaCaptionsInputSchema = z.object({
   productName: z.string().describe('The name of the product to generate captions for.'),
+  tone: TonesEnum.describe('The tone of the captions.'),
 });
 export type GenerateSocialMediaCaptionsInput = z.infer<typeof GenerateSocialMediaCaptionsInputSchema>;
 
@@ -28,7 +33,9 @@ const prompt = ai.definePrompt({
   name: 'generateSocialMediaCaptionsPrompt',
   input: {schema: GenerateSocialMediaCaptionsInputSchema},
   output: {schema: GenerateSocialMediaCaptionsOutputSchema},
-  prompt: `You are a social media marketing expert. Generate three short, creative social media captions (under 70 words each) to promote the following product on social media platforms. Focus on persuasive language and tone.
+  prompt: `You are a social media marketing expert. Generate three short, creative social media captions (under 70 words each) to promote the following product on social media platforms. 
+
+Use a {{{tone}}} tone.
 
 Product Name: {{{productName}}}
 `,

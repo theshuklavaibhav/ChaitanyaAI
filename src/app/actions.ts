@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
-import { generateSocialMediaCaptions } from '@/ai/flows/generate-social-media-captions';
+import { generateSocialMediaCaptions, Tone } from '@/ai/flows/generate-social-media-captions';
 import { generateImage } from '@/ai/flows/generate-image';
 
 const productSchema = z.object({
@@ -25,7 +25,7 @@ export async function handleGenerateDescription(productName: string) {
   }
 }
 
-export async function handleGenerateCaptions(productName: string) {
+export async function handleGenerateCaptions(productName: string, tone: Tone) {
   const validation = productSchema.safeParse({ productName });
 
   if (!validation.success) {
@@ -33,7 +33,7 @@ export async function handleGenerateCaptions(productName: string) {
   }
 
   try {
-    const result = await generateSocialMediaCaptions({ productName: validation.data.productName });
+    const result = await generateSocialMediaCaptions({ productName: validation.data.productName, tone });
     return { data: result.captions };
   } catch (e) {
     console.error(e);

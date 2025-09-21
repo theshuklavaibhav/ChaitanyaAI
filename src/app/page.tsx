@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +13,10 @@ import { useToast } from '@/hooks/use-toast';
 import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import type { Tone } from '@/ai/flows/generate-social-media-captions';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 
 export default function Home() {
   const { toast } = useToast();
@@ -24,6 +28,7 @@ export default function Home() {
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string>('');
+  const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
   const defaultImage = PlaceHolderImages[0];
 
@@ -70,7 +75,7 @@ export default function Home() {
 
     setIsCaptionsLoading(true);
     setCaptions(null);
-    const result = await handleGenerateCaptions(productName);
+    const result = await handleGenerateCaptions(productName, captionTone);
     setIsCaptionsLoading(false);
 
     if (result.error) {
@@ -86,7 +91,11 @@ export default function Home() {
 
   const onGenerateImage = async () => {
     if (!productName) {
-      // The toast is already shown in onGenerateAll
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Please enter a product name.',
+      });
       return;
     }
     setIsImageLoading(true);
@@ -118,6 +127,19 @@ export default function Home() {
     onGenerateImage();
   };
 
+  const onGenerateContent = () => {
+    if (!productName) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Please enter a product name.',
+      });
+      return;
+    }
+    onGenerateDescription();
+    onGenerateCaptions();
+  }
+
 
   const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading;
 
@@ -141,7 +163,7 @@ export default function Home() {
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
               <CardDescription>
-                Enter your product details and let our AI do the writing and image creation.
+                Enter your product name and let our AI generate content for you.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -155,11 +177,26 @@ export default function Home() {
                   disabled={isLoading}
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="caption-tone">Caption Tone</Label>
+                <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
+                  <SelectTrigger id="caption-tone">
+                    <SelectValue placeholder="Select a tone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tones.map((tone) => (
+                      <SelectItem key={tone} value={tone}>
+                        {tone}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-4">
-              <Button onClick={onGenerateAll} disabled={isLoading || !productName} className="w-full" variant="default">
-                <Sparkles className="mr-2 h-4 w-4" />
-                Generate All
+               <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full">
+                <Pencil className="mr-2 h-4 w-4" />
+                Generate Content
               </Button>
             </CardFooter>
           </Card>
@@ -174,16 +211,12 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                     <div className="aspect-video w-full relative rounded-lg overflow-hidden border">
-                      {isImageLoading || !displayImageUrl ? (
+                      {isImageLoading ? (
                         <div className="h-full w-full flex items-center justify-center bg-muted">
-                           {isImageLoading ? (
-                             <div className="text-center text-muted-foreground">
-                               <p>Generating your image...</p>
-                               <p className="text-xs">This may take a moment.</p>
-                             </div>
-                           ) : (
-                            <Skeleton className="h-full w-full" />
-                           )}
+                           <div className="text-center text-muted-foreground">
+                             <p>Generating your image...</p>
+                             <p className="text-xs">This may take a moment.</p>
+                           </div>
                         </div>
                       ) : (
                         <Image 
@@ -196,6 +229,12 @@ export default function Home() {
                       )}
                     </div>
                 </CardContent>
+                <CardFooter>
+                  <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} className="w-full" variant="secondary">
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Generate Image
+                  </Button>
+                </CardFooter>
             </Card>
 
             {(isDescriptionLoading || description) && (
