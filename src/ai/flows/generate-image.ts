@@ -32,15 +32,10 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async (input) => {
-    try {
-        const { media } = await ai.generate({
-            model: 'googleai/imagen-4.0-fast-generate-001',
-            prompt: `A high-quality, professional product photograph of a ${input.productName}. The product should be on a clean, neutral background. The lighting should be bright and even.`,
-        });
-        return {imageUrl: media?.url ?? ''};
-    } catch (error) {
-        console.error('Image generation failed:', error);
-        return {imageUrl: ''};
-    }
+    const { media } = await ai.generate({
+        model: 'googleai/imagen-4.0-fast-generate-001',
+        prompt: `A high-quality, professional product photograph of a ${input.productName}. The product should be on a clean, neutral background. The lighting should be bright and even.`,
+    });
+    return {imageUrl: media?.url ?? ''};
   }
 );
