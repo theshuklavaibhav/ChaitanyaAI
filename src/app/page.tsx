@@ -354,8 +354,8 @@ setIsShopifyLoading(false);
         </section>
 
           <div ref={mainContentRef} className="container mx-auto px-4 pb-24">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              <div className="lg:col-span-4 space-y-8 sticky top-24">
+            <div className="flex flex-col items-center gap-8">
+              <div className="w-full max-w-xl space-y-8">
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="font-bold text-2xl">Generate Your Content</CardTitle>
@@ -456,7 +456,7 @@ setIsShopifyLoading(false);
                 </Card>
               </div>
               
-              <div className="lg:col-span-8">
+              <div className="w-full max-w-4xl">
                 <div className="space-y-8">
                     {(isTrendsLoading || trends) && (
                       <Card className="bg-card border-border">
@@ -793,5 +793,7 @@ setIsShopifyLoading(false);
 
     
 } 
+
+    
 
     
