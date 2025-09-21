@@ -321,7 +321,7 @@ setIsShopifyLoading(false);
             >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#70D5F3_0%,#3B82F6_50%,#70D5F3_100%)]" />
               <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-                Schedule a Discovery Meeting
+                Get Started
               </span>
             </button>
         </section>
@@ -764,4 +764,5 @@ setIsShopifyLoading(false);
     </div>
   );
 
+    
     
