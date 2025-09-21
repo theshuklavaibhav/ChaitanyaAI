@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
-import { generateSocialMediaCaptions, Tone } from '@/ai/flows/generate-social-media-captions';
+import { generateSocialMediaCaptions } from '@/ai/flows/generate-social-media-captions';
 import { generateImage } from '@/ai/flows/generate-image';
 
 const productSchema = z.object({
@@ -24,6 +24,9 @@ export async function handleGenerateDescription(productName: string) {
     return { error: 'Failed to generate description. Please try again.' };
   }
 }
+
+const tones = ['Persuasive', 'Creative', 'Professional'] as const;
+export type Tone = (typeof tones)[number];
 
 export async function handleGenerateCaptions(productName: string, tone: Tone) {
   const validation = productSchema.safeParse({ productName });

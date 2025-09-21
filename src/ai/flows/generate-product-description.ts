@@ -22,7 +22,7 @@ const GenerateProductDescriptionOutputSchema = z.object({
   productDescription: z
     .string()
     .describe(
-      'A 150-200 word compelling product description highlighting traditional craftsmanship, uniqueness, and cultural value.'
+      'A 150-200 word compelling product description that tells a story, highlighting traditional craftsmanship, uniqueness, and cultural value.'
     ),
 });
 export type GenerateProductDescriptionOutput = z.infer<
@@ -39,7 +39,7 @@ const prompt = ai.definePrompt({
   name: 'generateProductDescriptionPrompt',
   input: {schema: GenerateProductDescriptionInputSchema},
   output: {schema: GenerateProductDescriptionOutputSchema},
-  prompt: `You are an expert copywriter specializing in crafting product descriptions that highlight traditional craftsmanship, uniqueness, and cultural value.
+  prompt: `You are an expert copywriter specializing in crafting product descriptions that tell a story. You focus on traditional craftsmanship, uniqueness, and cultural value. Your writing is evocative, personal, and makes the reader feel connected to the artisan.
 
   Write a 150-200 word compelling product description for the following product:
   Product Name: {{{productName}}}

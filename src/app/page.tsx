@@ -10,10 +10,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, type Tone } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import type { Tone } from '@/ai/flows/generate-social-media-captions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const tones: Tone[] = ['Persuasive', 'Creative', 'Professional'];
@@ -35,8 +34,10 @@ export default function Home() {
   useEffect(() => {
     if (generatedImageUrl) {
       setDisplayImageUrl(generatedImageUrl);
+    } else {
+      setDisplayImageUrl(defaultImage.imageUrl);
     }
-  }, [generatedImageUrl]);
+  }, [generatedImageUrl, defaultImage.imageUrl]);
 
 
   const onGenerateDescription = async () => {
