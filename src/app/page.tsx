@@ -333,7 +333,7 @@ setIsShopifyLoading(false);
       
       <main className="flex-grow">
         <section 
-          className="container mx-auto px-4 py-20 lg:py-32 text-center relative"
+          className="container mx-auto px-4 py-16 md:py-20 lg:py-32 text-center relative"
         >
           <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/10 to-cyan-400/10 blur-3xl dark:from-blue-500/10 dark:to-cyan-400/10"></div>
           <h1 className="text-4xl md:text-6xl font-bold leading-tight relative bg-clip-text text-transparent bg-gradient-to-b from-foreground/80 to-foreground">
@@ -680,7 +680,7 @@ setIsShopifyLoading(false);
                                 <Skeleton className="h-6 w-full bg-muted" />
                                 <Skeleton className="h-8 w-1/3 mt-4 bg-muted" />
                                 <Skeleton className="h-10 w-full bg-muted" />
-                                <Skeleton className="h-8 w-1_3 mt-4 bg-muted" />
+                                <Skeleton className="h-8 w_3 mt-4 bg-muted" />
                                 <div className="flex flex-wrap gap-2">
                                     <Skeleton className="h-6 w-20 bg-muted" />
                                     <Skeleton className="h-6 w-24 bg-muted" />
@@ -793,3 +793,5 @@ setIsShopifyLoading(false);
 
     
 } 
+
+    
