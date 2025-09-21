@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Sparkles, Bot, Image as ImageIcon } from 'lucide-react';
 
@@ -23,9 +23,14 @@ export default function Home() {
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const [displayImageUrl, setDisplayImageUrl] = useState<string>('');
 
   const defaultImage = PlaceHolderImages[0];
-  const displayImageUrl = generatedImageUrl || defaultImage.imageUrl;
+
+  useEffect(() => {
+    setDisplayImageUrl(generatedImageUrl || defaultImage.imageUrl);
+  }, [generatedImageUrl, defaultImage.imageUrl]);
+
 
   const onGenerateDescription = async () => {
     if (!productName) {
@@ -169,12 +174,16 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                     <div className="aspect-video w-full relative rounded-lg overflow-hidden border">
-                      {isImageLoading ? (
+                      {isImageLoading || !displayImageUrl ? (
                         <div className="h-full w-full flex items-center justify-center bg-muted">
-                          <div className="text-center text-muted-foreground">
-                            <p>Generating your image...</p>
-                            <p className="text-xs">This may take a moment.</p>
-                          </div>
+                           {isImageLoading ? (
+                             <div className="text-center text-muted-foreground">
+                               <p>Generating your image...</p>
+                               <p className="text-xs">This may take a moment.</p>
+                             </div>
+                           ) : (
+                            <Skeleton className="h-full w-full" />
+                           )}
                         </div>
                       ) : (
                         <Image 
