@@ -34,7 +34,7 @@ const generateImageFlow = ai.defineFlow(
   async (input) => {
     try {
         const { media } = await ai.generate({
-            model: 'googleai/gemini-pro-vision',
+            model: 'googleai/imagen-4.0-fast-generate-001',
             prompt: `A high-quality, professional product photograph of a ${input.productName}. The product should be on a clean, neutral background. The lighting should be bright and even.`,
         });
         return {imageUrl: media?.url ?? ''};
