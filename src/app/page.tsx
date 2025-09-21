@@ -81,11 +81,7 @@ export default function Home() {
 
   const onGenerateImage = async () => {
     if (!productName) {
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'Please enter a product name.',
-      });
+      // The toast is already shown in onGenerateAll
       return;
     }
     setIsImageLoading(true);
@@ -103,9 +99,18 @@ export default function Home() {
     }
   }
 
-  const onGenerateText = () => {
+  const onGenerateAll = () => {
+    if (!productName) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'Please enter a product name.',
+      });
+      return;
+    }
     onGenerateDescription();
     onGenerateCaptions();
+    onGenerateImage();
   };
 
 
@@ -131,7 +136,7 @@ export default function Home() {
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
               <CardDescription>
-                Enter your product details and let our AI do the writing.
+                Enter your product details and let our AI do the writing and image creation.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -147,9 +152,9 @@ export default function Home() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-4">
-              <Button onClick={onGenerateText} disabled={isDescriptionLoading || isCaptionsLoading || !productName} className="w-full" variant="default">
+              <Button onClick={onGenerateAll} disabled={isLoading || !productName} className="w-full" variant="default">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Generate Content
+                Generate All
               </Button>
             </CardFooter>
           </Card>
@@ -161,10 +166,6 @@ export default function Home() {
                       <ImageIcon className="w-6 h-6 text-muted-foreground" />
                       <CardTitle className="font-headline text-2xl">Product Preview</CardTitle>
                   </div>
-                  <Button onClick={onGenerateImage} disabled={isImageLoading || !productName} size="sm">
-                    <ImageIcon className="mr-2 h-4 w-4" />
-                    Generate Image
-                  </Button>
                 </CardHeader>
                 <CardContent>
                     <div className="aspect-video w-full relative rounded-lg overflow-hidden border">
