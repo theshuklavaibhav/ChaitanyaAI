@@ -24,81 +24,10 @@ import type { GenerateShopifyListingOutput } from '@/ai/flows/generate-shopify-l
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import type { SVGProps } from 'react';
-import { cn } from '@/lib/utils';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
 const languages = ['Hindi', 'Spanish', 'French'];
-
-function GoogleCloudLogo(props: SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 108 20"
-            role="img"
-            aria-label="Google Cloud"
-            className={cn("fill-foreground", props.className)}
-            {...props}
-        >
-            <path d="M100.3 4.2v11.6h-2.1V4.2h2.1zm-8.2 11.4c-1.8 0-3.3-1.5-3.3-3.4s1.5-3.4 3.3-3.4c1.8 0 3.3 1.5 3.3 3.4s-1.4 3.4-3.3 3.4zm0-1.4c1 0 1.6-.8 1.6-2s-.6-2-1.6-2c-1 0-1.6.8-1.6 2s.6 2 1.6 2zM83.4 15.6c-1.8 0-3.3-1.5-3.3-3.4s1.5-3.4 3.3-3.4c1.8 0 3.3 1.5 3.3 3.4s-1.5 3.4-3.3 3.4zm0-1.4c1 0 1.6-.8 1.6-2s-.6-2-1.6-2c-1 0-1.6.8-1.6 2s.6 2 1.6 2zM74.8 15.6c-1.8 0-3.3-1.5-3.3-3.4s1.5-3.4 3.3-3.4c1.8 0 3.3 1.5 3.3 3.4s-1.5 3.4-3.3 3.4zm0-1.4c1 0 1.6-.8 1.6-2s-.6-2-1.6-2c-1 0-1.6.8-1.6 2s.6 2 1.6 2zM67.3 12.3c0-1.2.8-2 1.8-2 .9 0 1.5.5 1.7.9l-1.3.8c-.1-.2-.4-.4-.6-.4s-.5.2-.5.5v2.8h-1.1v-3.6zM62.6 15.6c-.4 0-.8-.1-1.1-.3L62 13v-3h-1.9v3.4c0 1.6 1 2.6 2.5 2.6.4 0 .8-.1 1.1-.2l-.2-1.2c-.2.1-.5.2-.7.2z" />
-            <path d="M46.6 12.1c0-1.5 1.1-2.4 2.5-2.4s2.5.9 2.5 2.4c0 1.5-1.1 2.4-2.5 2.4s-2.5-1-2.5-2.4zm4 .1c0-1-.6-1.5-1.5-1.5s-1.5.5-1.5 1.5.6 1.5 1.5 1.5 1.5-.5 1.5-1.5zM53.3 10.8h1.8v1.3c.4-.9 1-1.5 1.9-1.5.2 0 .4 0 .6.1l-.3 1.8c-.1-.1-.3-.1-.5-.1-1 0-1.6.8-1.6 1.9v3.5h-1.9v-6z" />
-            <path d="M37.8 12.1c0-1.5 1.1-2.4 2.5-2.4s2.5.9 2.5 2.4c0 1.5-1.1 2.4-2.5 2.4s-2.5-.9-2.5-2.4zm4 .1c0-1-.6-1.5-1.5-1.5s-1.5.5-1.5 1.5.6 1.5 1.5 1.5 1.5-.5 1.5-1.5zM29.5 12.1c0-1.5 1.1-2.4 2.5-2.4s2.5.9 2.5 2.4c0 1.5-1.1 2.4-2.5 2.4s-2.5-.9-2.5-2.4zm4 .1c0-1-.6-1.5-1.5-1.5s-1.5.5-1.5 1.5.6 1.5 1.5 1.5 1.5-.5 1.5-1.5zM24.7 15.6c-.9 0-1.6-.3-2-1l1.5-1c.2.4.6.6 1 .6.5 0 .9-.2.9-.6V0h1.9v14c0 1.7-1.1 2.6-2.9 2.6-.6 0-1.2-.1-1.7-.4l.3-1.6zM18.8 15.4h-6v-1.4h6v1.4zm-.2-2.7h-5.6v-1.4h5.6v1.4zm-.2-2.7h-5.6V8.6h5.6v1.4z" />
-            <path d="M10.1 4.2h1.9v11.6h-1.9V4.2zM0 15.8h1.9v-1c.4.6 1.2 1.2 2.2 1.2 1.8 0 3.3-1.5 3.3-3.4s-1.5-3.4-3.3-3.4c-1.1 0-1.8.5-2.2 1.1V4.2H0v11.6zm4.1-3.6c1 0 1.6.8 1.6 2s-.6 2-1.6 2c-1 0-1.6-.8-1.6-2s.6-2 1.6-2z" />
-        </svg>
-    )
-}
-
-function GeminiLogo(props: SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            role="img"
-            aria-label="Gemini"
-            className={cn("fill-foreground", props.className)}
-            {...props}
-        >
-            <path d="M12,2.6L9.4,7.4H4.2l4.2,3-1.6,4.8L11,12.2V21.4h2V12.2l4.2,3-1.6-4.8L20,7.4H14.6Z"/>
-        </svg>
-    )
-}
-
-function FirebaseLogo(props: SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 145 40"
-            role="img"
-            aria-label="Firebase"
-            className={cn("fill-foreground", props.className)}
-            {...props}
-        >
-            <path d="M3.57908 39.8801L0 35.084V0.598633H31.968V5.09383H5.43708V16.8328H28.3891V21.328H5.43708V35.3849H32.0911V39.8801H3.57908Z" />
-            <path d="M42.2358 39.8801V0.598633H47.6729V39.8801H42.2358Z" />
-            <path d="M51.849 39.8801V0.598633H74.5776C79.8837 0.598633 83.1558 2.62706 83.1558 7.3703C83.1558 10.893 81.3997 13.111 78.4476 14.1593L84.8199 22.062V22.4566L78.2046 39.8801H72.3729L77.411 22.8512H57.2861V39.8801H51.849ZM57.2861 18.3558H72.4959C76.2239 18.3558 77.8999 16.7192 77.8999 13.0319C77.8999 9.30513 76.1439 7.78034 72.4959 7.78034H57.2861V18.3558Z" />
-            <path d="M91.9059 39.8801V5.09383H86.4689V0.598633H108.972V5.09383H103.535V39.8801H98.0979V5.09383H97.3429V39.8801H91.9059Z" />
-            <path d="M117.844 32.5539C116.512 33.728 114.656 34.4069 112.557 34.4069C108.23 34.4069 105.511 31.7275 105.511 27.5121C105.511 23.4085 108.067 20.6173 112.605 20.6173C114.499 20.6173 116.294 21.2568 117.489 22.4308L120.972 19.0205C118.625 16.7225 115.834 15.6348 112.362 15.6348C105.268 15.6348 100.076 20.4705 100.076 27.5516C100.076 34.5208 105.229 39.4683 112.485 39.4683C115.834 39.4683 118.664 38.3043 121.087 35.8937L117.844 32.5539Z" />
-            <path d="M129.569 39.8801C135.237 39.8801 139.736 36.3179 139.736 30.5786V30.224C139.573 35.163 135.523 37.9937 130.65 37.9937C127.354 37.9937 124.634 36.6322 122.958 34.1593L122.564 34.7183V39.8801H117.281V16.1481H122.718V26.2483C122.718 28.5857 124.24 29.9867 126.231 29.9867C127.868 29.9867 129.122 29.1136 129.988 27.8273V16.1481H135.425V26.6029C135.425 28.1772 135.984 30.154 137.98 30.9271L137.94 30.8876C138.806 28.9502 139.05 27.2934 139.05 25.5606C139.05 20.9715 135.912 17.636 130.364 17.636C124.24 17.636 119.534 22.319 119.534 28.5463C119.534 35.0112 123.822 39.8801 129.569 39.8801Z" />
-            <path d="M144.331 0.598633V39.8801H138.894V0.598633H144.331Z" />
-        </svg>
-    )
-}
-
-function VertexAiLogo(props: SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            role="img"
-            aria-label="Vertex AI"
-            className={cn("fill-foreground", props.className)}
-            {...props}
-        >
-            <path d="M16.94 6.33a.8.8 0 0 0-.8-.8h-1.6a.8.8 0 0 0-.8.8v3.12a.8.8 0 0 0 .8.8h1.6a.8.8 0 0 0 .8-.8zM12.8 3.93a.8.8 0 0 0-.8-.8h-1.6a.8.8 0 0 0-.8.8v7.92a.8.8 0 0 0 .8.8h1.6a.8.8 0 0 0 .8-.8zM8.66 8.73a.8.8 0 0 0-.8-.8H6.26a.8.8 0 0 0-.8.8v5.32a.8.8 0 0 0 .8.8h1.6a.8.8 0 0 0 .8-.8z" opacity=".6"></path><path d="M12.8 14.85a.8.8 0 0 0-.8-.8h-1.6a.8.8 0 0 0-.8.8v1.52a.8.8 0 0 0 .8.8h1.6a.8.8 0 0 0 .8-.8zM8.66 14.85a.8.8 0 0 0-.8-.8H6.26a.8.8 0 0 0-.8.8v1.52a.8.8 0 0 0 .8.8h1.6a.8.8 0 0 0 .8-.8zM16.94 10.25a.8.8 0 0 0-.8-.8h-1.6a.8.8 0 0 0-.8.8v6.12a.8.8 0 0 0 .8.8h1.6a.8.8 0 0 0 .8-.8z" opacity=".8"></path><path d="m11.5 21.5-5-5a.47.47 0 0 1 0-.7l.9-.9a.47.447 0 0 1 .7 0L12 18.8l3.9-3.9a.47.47 0 0 1 .7 0l.9.9a.47.47 0 0 1 0 .7l-5 5a.47.47 0 0 1-.7 0Z"></path>
-        </svg>
-    )
-}
 
 export default function Home() {
   const { toast } = useToast();
@@ -901,16 +830,16 @@ setIsShopifyLoading(false);
             <p className="text-sm text-muted-foreground mb-6">Powered by Google Cloud's cutting-edge AI technology</p>
             <div className="flex justify-center items-center gap-8 flex-wrap">
                 <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                    <GoogleCloudLogo className="w-32" />
+                    <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454710/Google_Cloud_logo.svg_sfwwbj.png" alt="Google Cloud Logo" width={128} height={20} className="dark:invert"/>
                 </a>
                 <a href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                   <GeminiLogo className="w-24" />
+                   <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/gemini_logo_gmrqix.png" alt="Gemini Logo" width={96} height={32}/>
                 </a>
                 <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                   <FirebaseLogo className="w-28" />
+                   <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/firebase_logo_daipos.svg" alt="Firebase Logo" width={112} height={40} className="dark:invert" />
                 </a>
                 <a href="https://cloud.google.com/vertex-ai" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                    <VertexAiLogo className="w-28" />
+                    <Image src="https://res.cloudinary.com/dnhx7xyz2/image/upload/v1758454709/VertexAI_Logo_ewd9oo.png" alt="Vertex AI Logo" width={112} height={40} className="dark:invert"/>
                 </a>
             </div>
         </div>
