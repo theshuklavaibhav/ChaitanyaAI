@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon, Github, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import type { GenerateShopifyListingOutput } from '@/ai/flows/generate-shopify-listing';
 import { Textarea } from '@/components/ui/textarea';
 import { GoogleCloudLogo } from '@/components/google-cloud-logo';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
@@ -51,6 +52,8 @@ export default function Home() {
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
   const mainContentRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLElement>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const defaultImage = PlaceHolderImages[0];
   const [displayImageUrl, setDisplayImageUrl] = useState<string>(defaultImage.imageUrl);
@@ -72,6 +75,10 @@ export default function Home() {
 
   const scrollToContent = () => {
     mainContentRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
+  const scrollToFooter = () => {
+    footerRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const onGenerateDescription = async () => {
@@ -292,20 +299,36 @@ setIsShopifyLoading(false);
 
   const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading || isTranslating || isEtsyLoading || isShopifyLoading;
 
+  const navLinks = (
+    <>
+      <Button variant="link" onClick={() => { scrollToContent(); setIsMobileMenuOpen(false); }} className="text-foreground/80 hover:text-foreground">Features</Button>
+      <Button variant="link" onClick={() => { scrollToFooter(); setIsMobileMenuOpen(false); }} className="text-foreground/80 hover:text-foreground">About</Button>
+    </>
+  );
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
-            <div className="mr-4 hidden md:flex">
+            <div className="mr-4 flex items-center">
               <a className="mr-6 flex items-center space-x-2" href="/">
                 <Logo className="w-8 h-8 text-primary" />
                 <span className="hidden font-bold sm:inline-block">
                   ChaitanyaAI
                 </span>
               </a>
+              <nav className="hidden items-center space-x-2 md:flex">
+                {navLinks}
+              </nav>
             </div>
-            <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-              <nav className="flex items-center">
+            
+            <div className="flex flex-1 items-center justify-end space-x-2">
+              <a href="https://github.com/GoogleCloudPlatform/firebase-studio-templates" target="_blank" rel="noopener noreferrer">
+                <Button variant="ghost" size="icon">
+                  <Github className="h-5 w-5" />
+                  <span className="sr-only">GitHub</span>
+                </Button>
+              </a>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -326,7 +349,21 @@ setIsShopifyLoading(false);
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              </nav>
+              <div className="md:hidden">
+                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Menu className="h-6 w-6" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-[240px] bg-background">
+                     <div className="mt-8 flex flex-col space-y-4">
+                      {navLinks}
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
             </div>
         </div>
       </header>
@@ -783,7 +820,7 @@ setIsShopifyLoading(false);
             </div>
           </div>
       </main>
-      <footer className="container mx-auto px-4 py-8">
+      <footer ref={footerRef} className="container mx-auto px-4 py-8">
         <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
             <p>Powered by</p>
             <GoogleCloudLogo className="w-28" />
@@ -794,9 +831,9 @@ setIsShopifyLoading(false);
 
     
 } 
-
     
 
     
+
 
 
