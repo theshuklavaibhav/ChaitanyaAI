@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp, Languages, Copy, Check, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,6 +29,7 @@ const languages = ['Hindi', 'Spanish', 'French'];
 
 export default function Home() {
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [productName, setProductName] = useState('');
   const [artisanName, setArtisanName] = useState('');
   const [description, setDescription] = useState<string | null>(null);
@@ -286,11 +288,22 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-3">
-          <Logo className="w-10 h-10 text-primary" />
-          <h1 className="text-4xl font-headline font-bold text-foreground">
-            CraftAI
-          </h1>
+        <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <Logo className="w-10 h-10 text-primary" />
+              <h1 className="text-4xl font-headline font-bold text-foreground">
+                CraftAI
+              </h1>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+            >
+              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
         </div>
         <p className="text-muted-foreground mt-2 text-lg">
           Your AI-powered marketplace assistant for showcasing Indian artisanship.
@@ -350,7 +363,7 @@ export default function Home() {
                           <Pencil className="mr-2 h-4 w-4" />
                           Description & Captions
                       </Button>
-                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full" variant="outline">
+                      <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full" variant="secondary">
                           <BookUser className="mr-2 h-4 w-4" />
                           Generate Story
                       </Button>
