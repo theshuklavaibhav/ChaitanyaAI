@@ -23,6 +23,7 @@ import type { GenerateShopifyListingOutput } from '@/ai/flows/generate-shopify-l
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
@@ -388,108 +389,118 @@ setIsShopifyLoading(false);
           <div ref={mainContentRef} className="container mx-auto px-4 pb-24">
             <div className="flex flex-col items-center gap-8">
               <div className="w-full max-w-xl space-y-8">
-                <Card className="bg-card border-border">
-                  <CardHeader>
-                    <CardTitle className="font-bold text-2xl">Generate Marketing Content</CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      Enter your business details and let our AI generate marketing content for you.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                      <Label htmlFor="brand-name">Brand / Founder Name</Label>
-                      <Input
-                        id="brand-name"
-                        placeholder="e.g., Priya's Kitchen"
-                        value={brandName}
-                        onChange={(e) => setBrandName(e.target.value)}
-                        disabled={isLoading}
-                        className="bg-background border-input"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="product-name">Product / Service / Industry</Label>
-                      <Input
-                        id="product-name"
-                        placeholder="e.g., Homemade Pickles"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        disabled={isLoading}
-                        className="bg-background border-input"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
-                      <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
-                        <SelectTrigger id="caption-tone" className="bg-background border-input">
-                          <SelectValue placeholder="Select a tone" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-popover border-border text-popover-foreground">
-                          {tones.map((tone) => (
-                            <SelectItem key={tone} value={tone} className="focus:bg-accent">
-                              {tone}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex flex-col gap-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                          <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                              <Pencil className="mr-2 h-4 w-4" />
-                              Description & Captions
+                <Tabs defaultValue="marketing" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="marketing">Marketing Content</TabsTrigger>
+                    <TabsTrigger value="email">Email Responder</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="marketing">
+                    <Card className="bg-card border-border">
+                      <CardHeader>
+                        <CardTitle className="font-bold text-2xl">Generate Marketing Content</CardTitle>
+                        <CardDescription className="text-muted-foreground">
+                          Enter your business details and let our AI generate marketing content for you.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                      <div className="space-y-2">
+                          <Label htmlFor="brand-name">Brand / Founder Name</Label>
+                          <Input
+                            id="brand-name"
+                            placeholder="e.g., Priya's Kitchen"
+                            value={brandName}
+                            onChange={(e) => setBrandName(e.target.value)}
+                            disabled={isLoading}
+                            className="bg-background border-input"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="product-name">Product / Service / Industry</Label>
+                          <Input
+                            id="product-name"
+                            placeholder="e.g., Homemade Pickles"
+                            value={productName}
+                            onChange={(e) => setProductName(e.target.value)}
+                            disabled={isLoading}
+                            className="bg-background border-input"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="caption-tone">Social Media Caption Tone</Label>
+                          <Select value={captionTone} onValueChange={(value: Tone) => setCaptionTone(value)} disabled={isLoading}>
+                            <SelectTrigger id="caption-tone" className="bg-background border-input">
+                              <SelectValue placeholder="Select a tone" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-popover border-border text-popover-foreground">
+                              {tones.map((tone) => (
+                                <SelectItem key={tone} value={tone} className="focus:bg-accent">
+                                  {tone}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex flex-col gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                              <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  Description & Captions
+                              </Button>
+                              <Button onClick={onGenerateStory} disabled={isLoading || !productName || !brandName} className="w-full" variant="secondary">
+                                  <BookUser className="mr-2 h-4 w-4" />
+                                  Generate Story
+                              </Button>
+                          </div>
+                           <Button onClick={onAnalyzeTrends} disabled={isLoading || !productName} className="w-full" variant="outline">
+                              <Lightbulb className="mr-2 h-4 w-4" />
+                              Analyze Market Trends
                           </Button>
-                          <Button onClick={onGenerateStory} disabled={isLoading || !productName || !brandName} className="w-full" variant="secondary">
-                              <BookUser className="mr-2 h-4 w-4" />
-                              Generate Story
-                          </Button>
-                      </div>
-                       <Button onClick={onAnalyzeTrends} disabled={isLoading || !productName} className="w-full" variant="outline">
-                          <Lightbulb className="mr-2 h-4 w-4" />
-                          Analyze Market Trends
-                      </Button>
-                  </CardFooter>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-bold text-2xl">AI Email Responder</CardTitle>
-                    <CardDescription>
-                      Draft professional emails in seconds. Just provide the topic and tone.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email-topic">Email Topic</Label>
-                      <Input
-                        id="email-topic"
-                        placeholder="e.g., Follow up on invoice #123"
-                        value={emailTopic}
-                        onChange={(e) => setEmailTopic(e.target.value)}
-                        disabled={isLoading}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email-tone">Tone</Label>
-                      <Select value={emailTone} onValueChange={(value: EmailTone) => setEmailTone(value)} disabled={isLoading}>
-                        <SelectTrigger id="email-tone">
-                          <SelectValue placeholder="Select a tone" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {emailTones.map((tone) => (
-                            <SelectItem key={tone} value={tone}>{tone}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button onClick={onGenerateEmail} disabled={isLoading || !emailTopic} className="w-full">
-                      <Mail className="mr-2 h-4 w-4" />
-                      Generate Email
-                    </Button>
-                  </CardFooter>
-                </Card>
+                      </CardFooter>
+                    </Card>
+                  </TabsContent>
+                  <TabsContent value="email">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="font-bold text-2xl">AI Email Responder</CardTitle>
+                        <CardDescription>
+                          Draft professional emails in seconds. Just provide the topic and tone.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="email-topic">Email Topic</Label>
+                          <Input
+                            id="email-topic"
+                            placeholder="e.g., Follow up on invoice #123"
+                            value={emailTopic}
+                            onChange={(e) => setEmailTopic(e.target.value)}
+                            disabled={isLoading}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email-tone">Tone</Label>
+                          <Select value={emailTone} onValueChange={(value: EmailTone) => setEmailTone(value)} disabled={isLoading}>
+                            <SelectTrigger id="email-tone">
+                              <SelectValue placeholder="Select a tone" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {emailTones.map((tone) => (
+                                <SelectItem key={tone} value={tone}>{tone}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </CardContent>
+                      <CardFooter>
+                        <Button onClick={onGenerateEmail} disabled={isLoading || !emailTopic} className="w-full">
+                          <Mail className="mr-2 h-4 w-4" />
+                          Generate Email
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
               </div>
               
               <div className="w-full max-w-4xl">
@@ -882,5 +893,3 @@ setIsShopifyLoading(false);
     </div>
   );
 }
-
-    
