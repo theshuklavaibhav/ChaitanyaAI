@@ -132,7 +132,7 @@ export default function Home() {
 
       <main className="flex-grow container mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <Card className="sticky top-8 shadow-lg">
+          <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Create Your Listing</CardTitle>
               <CardDescription>
