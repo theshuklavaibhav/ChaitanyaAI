@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Sparkles, Bot, ImageIcon, Pencil, BookUser } from 'lucide-react';
+import { Sparkles, Bot, ImageIcon, Pencil, BookUser, Lightbulb, Tag, Palette, TrendingUp } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,10 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory } from '@/app/actions';
+import { handleGenerateDescription, handleGenerateCaptions, handleGenerateImage, handleGenerateStory, handleAnalyzeTrends } from '@/app/actions';
 import { Logo } from '@/components/icons';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import type { AnalyzeMarketTrendsOutput } from '@/ai/flows/analyze-market-trends';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
@@ -25,10 +27,12 @@ export default function Home() {
   const [description, setDescription] = useState<string | null>(null);
   const [captions, setCaptions] = useState<string[] | null>(null);
   const [story, setStory] = useState<string | null>(null);
+  const [trends, setTrends] = useState<AnalyzeMarketTrendsOutput | null>(null);
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
   const [isCaptionsLoading, setIsCaptionsLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isStoryLoading, setIsStoryLoading] = useState(false);
+  const [isTrendsLoading, setIsTrendsLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [captionTone, setCaptionTone] = useState<Tone>('Creative');
 
@@ -144,6 +148,30 @@ export default function Home() {
     }
   }
 
+  const onAnalyzeTrends = async () => {
+    if (!productName) {
+        toast({
+            variant: 'destructive',
+            title: 'Uh oh! Something went wrong.',
+            description: 'Please enter a product name or craft type.',
+        });
+        return;
+    }
+    setIsTrendsLoading(true);
+    setTrends(null);
+    const result = await handleAnalyzeTrends(productName);
+    setIsTrendsLoading(false);
+    if (result.error) {
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: result.error,
+        });
+    } else if (result.data) {
+        setTrends(result.data);
+    }
+  }
+
   const onGenerateContent = () => {
     if (!productName) {
       toast({
@@ -158,7 +186,7 @@ export default function Home() {
   }
 
 
-  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading;
+  const isLoading = isDescriptionLoading || isCaptionsLoading || isImageLoading || isStoryLoading || isTrendsLoading;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -220,15 +248,21 @@ export default function Home() {
                 </Select>
               </div>
             </CardContent>
-            <CardFooter className="flex flex-col sm:flex-row gap-4">
-               <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full">
-                <Pencil className="mr-2 h-4 w-4" />
-                Generate Description & Captions
-              </Button>
-              <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full">
-                <BookUser className="mr-2 h-4 w-4" />
-                Generate Story
-              </Button>
+            <CardFooter className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                    <Button onClick={onGenerateContent} disabled={isLoading || !productName} className="w-full">
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Description & Captions
+                    </Button>
+                    <Button onClick={onGenerateStory} disabled={isLoading || !productName || !artisanName} className="w-full">
+                        <BookUser className="mr-2 h-4 w-4" />
+                        Generate Story
+                    </Button>
+                </div>
+                 <Button onClick={onAnalyzeTrends} disabled={isLoading || !productName} className="w-full" variant="outline">
+                    <Lightbulb className="mr-2 h-4 w-4" />
+                    Analyze Market Trends
+                </Button>
             </CardFooter>
           </Card>
           
@@ -267,6 +301,72 @@ export default function Home() {
                   </Button>
                 </CardFooter>
             </Card>
+
+            {(isTrendsLoading || trends) && (
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                    <Lightbulb className="w-6 h-6 text-primary" />
+                    Market Trend Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isTrendsLoading ? (
+                    <div className="space-y-4">
+                        <Skeleton className="h-8 w-1/3" />
+                        <div className="flex flex-wrap gap-2">
+                            <Skeleton className="h-6 w-20" />
+                            <Skeleton className="h-6 w-24" />
+                            <Skeleton className="h-6 w-16" />
+                        </div>
+                        <Skeleton className="h-8 w-1/3 mt-4" />
+                        <div className="flex gap-2">
+                            <Skeleton className="h-10 w-10 rounded-full" />
+                            <Skeleton className="h-10 w-10 rounded-full" />
+                            <Skeleton className="h-10 w-10 rounded-full" />
+                        </div>
+                    </div>
+                  ) : (
+                    trends && (
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                                    <Tag className="w-5 h-5 text-muted-foreground"/>
+                                    Popular Keywords
+                                </h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {trends.keywords.map(keyword => <Badge key={keyword} variant="secondary">{keyword}</Badge>)}
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                                    <Palette className="w-5 h-5 text-muted-foreground"/>
+                                    Trending Color Palette
+                                </h3>
+                                <div className="flex flex-wrap gap-4">
+                                    {trends.colorPalette.map(color => (
+                                        <div key={color.hex} className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full border-2" style={{ backgroundColor: color.hex }} />
+                                            <span className="text-sm">{color.name}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                             <div>
+                                <h3 className="text-lg font-semibold flex items-center gap-2 mb-2">
+                                    <TrendingUp className="w-5 h-5 text-muted-foreground"/>
+                                    Style Suggestions
+                                </h3>
+                                <ul className="list-disc list-inside space-y-2 text-foreground/90">
+                                   {trends.styleSuggestions.map((suggestion, i) => <li key={i}>{suggestion}</li>)}
+                                </ul>
+                            </div>
+                        </div>
+                    )
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {(isStoryLoading || story) && (
               <Card className="shadow-lg">

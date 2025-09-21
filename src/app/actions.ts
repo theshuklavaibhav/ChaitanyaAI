@@ -5,6 +5,7 @@ import { generateProductDescription } from '@/ai/flows/generate-product-descript
 import { generateSocialMediaCaptions, type GenerateSocialMediaCaptionsInput } from '@/ai/flows/generate-social-media-captions';
 import { generateImage } from '@/ai/flows/generate-image';
 import { generateBrandStory } from '@/ai/flows/generate-brand-story';
+import { analyzeMarketTrends } from '@/ai/flows/analyze-market-trends';
 
 const productSchema = z.object({
   productName: z.string().min(2, { message: 'Product name must be at least 2 characters.' }),
@@ -80,4 +81,20 @@ export async function handleGenerateStory(artisanName: string, craftType: string
       console.error(e);
       return { error: 'Failed to generate story. Please try again.' };
     }
-  }
+}
+
+export async function handleAnalyzeTrends(craftType: string) {
+    const validation = productSchema.safeParse({ productName: craftType });
+
+    if (!validation.success) {
+      return { error: validation.error.errors[0].message };
+    }
+
+    try {
+      const result = await analyzeMarketTrends({ craftType: validation.data.productName });
+      return { data: result };
+    } catch (e) {
+        console.error(e);
+        return { error: 'Failed to analyze trends. Please try again.' };
+    }
+}
