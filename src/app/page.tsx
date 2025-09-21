@@ -24,6 +24,10 @@ import type { GenerateShopifyListingOutput } from '@/ai/flows/generate-shopify-l
 import { Textarea } from '@/components/ui/textarea';
 import { GoogleCloudLogo } from '@/components/google-cloud-logo';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
+import { GeminiLogo } from '@/components/gemini-logo';
+import { FirebaseLogo } from '@/components/firebase-logo';
+import { VertexAiLogo } from '@/components/vertex-ai-logo';
 
 const tones = ['Persuasive', 'Creative', 'Professional'] as const;
 type Tone = (typeof tones)[number];
@@ -820,20 +824,30 @@ setIsShopifyLoading(false);
             </div>
           </div>
       </main>
-      <footer ref={footerRef} className="container mx-auto px-4 py-8">
-        <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground">
-            <p>Powered by</p>
-            <GoogleCloudLogo className="w-28" />
+      <footer ref={footerRef} className="border-t border-border/40">
+        <div className="container mx-auto px-4 py-12 text-center">
+            <h3 className="text-xl font-bold text-foreground/90 mb-4">About ChaitanyaAI</h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
+                ChaitanyaAI is dedicated to helping artisans and small businesses grow their digital presence with the power of AI. We provide easy-to-use tools to generate beautiful product descriptions, engaging social media content, and effective SEO keywords.
+            </p>
+            <Separator className="my-8 bg-border/40" />
+            <p className="text-sm text-muted-foreground mb-6">Powered by Google Cloud's cutting-edge AI technology</p>
+            <div className="flex justify-center items-center gap-8 flex-wrap">
+                <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                    <GoogleCloudLogo className="w-32" />
+                </a>
+                <a href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                   <GeminiLogo className="w-24" />
+                </a>
+                <a href="https://firebase.google.com/" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                   <FirebaseLogo className="w-28" />
+                </a>
+                <a href="https://cloud.google.com/vertex-ai" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                    <VertexAiLogo className="w-28" />
+                </a>
+            </div>
         </div>
       </footer>
     </div>
   );
-
-    
-} 
-    
-
-    
-
-
-
+}
